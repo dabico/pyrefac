@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.openapi.application.ApplicationStarter;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.psi.PsiManager;
+import com.jetbrains.python.psi.PyFile;
 import git4idea.commands.Git;
 import git4idea.commands.GitCommandResult;
 import groovyjarjarpicocli.CommandLine;
@@ -26,6 +30,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 public class PluginRunner implements ApplicationStarter {
@@ -92,7 +97,7 @@ public class PluginRunner implements ApplicationStarter {
                 index = "1",
                 description = "Path of the Python file to refactor, relative to the repository root"
         )
-        private Path path;
+        private Path relative;
 
         @Parameters(
                 index = "2",
@@ -152,9 +157,17 @@ public class PluginRunner implements ApplicationStarter {
             }
 
             try (AutoCloseableProject closable = new AutoCloseableProject(workdir)) {
-                Project ignored = closable.getProjectInstance();
+                Path absolute = workdir.resolve(relative);
+                Project project = closable.getProjectInstance();
                 Refactoring refactoring = OBJECT_MAPPER.treeToValue(config, type);
-                LOG.warn(refactoring.toString());
+                PsiManager psiManager = PsiManager.getInstance(project);
+                VirtualFileManager fileManager = VirtualFileManager.getInstance();
+                VirtualFile virtualFile = fileManager.findFileByNioPath(absolute);
+                PyFile pyFile = Optional.ofNullable(virtualFile)
+                        .map(psiManager::findFile)
+                        .map(PyFile.class::cast)
+                        .orElseThrow(() -> new FileNotFoundException("Not found: " + absolute));
+                refactoring.perform(project, pyFile);
             } catch (IOException ex) {
                 throw new UncheckedIOException(ex);
             } catch (JDOMException ex) {
