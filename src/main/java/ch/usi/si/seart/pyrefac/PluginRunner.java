@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.openapi.application.ApplicationStarter;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
 import git4idea.commands.Git;
 import git4idea.commands.GitCommandResult;
 import groovyjarjarpicocli.CommandLine;
@@ -14,6 +15,7 @@ import groovyjarjarpicocli.CommandLine.ITypeConverter;
 import groovyjarjarpicocli.CommandLine.ParameterException;
 import groovyjarjarpicocli.CommandLine.Parameters;
 import groovyjarjarpicocli.CommandLine.ParseResult;
+import org.jdom.JDOMException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -149,11 +151,14 @@ public class PluginRunner implements ApplicationStarter {
                 return result.getExitCode();
             }
 
-            try (AutomaticDirectoryCleaner ignored = new AutomaticDirectoryCleaner(workdir)) {
+            try (AutoCloseableProject closable = new AutoCloseableProject(workdir)) {
+                Project ignored = closable.getProjectInstance();
                 Refactoring refactoring = OBJECT_MAPPER.treeToValue(config, type);
                 LOG.warn(refactoring.toString());
             } catch (IOException ex) {
                 throw new UncheckedIOException(ex);
+            } catch (JDOMException ex) {
+                throw new IllegalStateException(ex);
             }
 
             return 0;
