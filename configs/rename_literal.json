@@ -1,0 +1,6 @@
+{
+  "class": "Converter",
+  "function": "__init__",
+  "old_name": "_dis",
+  "new_name": "disjoint_distribution"
+}

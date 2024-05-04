@@ -82,26 +82,45 @@ public class PluginRunner implements ApplicationStarter {
 
         @Parameters(
                 index = "0",
-                description = "The URL of the Git repository"
+                description = "URL of the Git repository"
         )
         private String url;
 
         @Parameters(
                 index = "1",
-                description = "The path to the Python file to refactor"
+                description = "Path of the Python file to refactor, relative to the repository root"
         )
         private Path path;
 
         @Parameters(
                 index = "2",
-                description = "The name of the refactoring to perform"
+                converter = RefactoringClassConverter.class,
+                description = "Name of the refactoring to perform, in `snake_case` format"
         )
-        private Refactoring refactoring;
+        private Class<? extends Refactoring> type;
+
+        private static final class RefactoringClassConverter implements ITypeConverter<Class<? extends Refactoring>> {
+
+            @Override
+            public Class<? extends Refactoring> convert(String value) {
+                String className = StringUtils.snakeToTitleCase(value);
+                String packageName = Refactoring.class.getPackageName();
+                String fullyQualifiedName = packageName + "." + className;
+
+                try {
+                    return Class.forName(fullyQualifiedName).asSubclass(Refactoring.class);
+                } catch (ClassNotFoundException ex) {
+                    throw new UnsupportedOperationException("Unsupported refactoring: " + value, ex);
+                } catch (ClassCastException ex) {
+                    throw new UnsupportedOperationException("Can not be used for refactoring: " + className, ex);
+                }
+            }
+        }
 
         @Parameters(
                 index = "3",
                 converter = JsonNodeConverter.class,
-                description = "The configuration file, containing refactoring inputs"
+                description = "Configuration file, containing refactoring-specific inputs"
         )
         private JsonNode config;
 
@@ -131,31 +150,13 @@ public class PluginRunner implements ApplicationStarter {
             }
 
             try (AutomaticDirectoryCleaner ignored = new AutomaticDirectoryCleaner(workdir)) {
-                switch (refactoring) {
-                    case ADD_COMMENT:
-                    case RENAME_LITERAL:
-                    case RENAME_FUNCTION_PARAMETER:
-                        break;
-                    default:
-                        throw new UnsupportedOperationException("Refactoring type not implemented: " + refactoring);
-                }
+                Refactoring refactoring = OBJECT_MAPPER.treeToValue(config, type);
+                LOG.warn(refactoring.toString());
             } catch (IOException ex) {
                 throw new UncheckedIOException(ex);
             }
 
             return 0;
-        }
-
-        private enum Refactoring {
-
-            ADD_COMMENT,
-            RENAME_LITERAL,
-            RENAME_FUNCTION_PARAMETER;
-
-            @Override
-            public String toString() {
-                return name().toLowerCase();
-            }
         }
     }
 }

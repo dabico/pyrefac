@@ -1,0 +1,6 @@
+{
+  "class": "EllipsoidTool",
+  "function": "plotEllipsoid",
+  "old_name": "cageAlpha",
+  "new_name": "cage_alpha"
+}

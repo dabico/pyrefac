@@ -1,11 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Plugin" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="Run Plugin [rename_literal]" type="GradleRunConfiguration" factoryName="Gradle">
     <log_file alias="idea.log" path="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log" />
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
       <option name="externalSystemIdString" value="GRADLE" />
-      <option name="scriptParameters" value="-Prepository=&quot;git@github.com:DL4XRayTomoImaging-KIT/measuring-repo.git&quot; -PfilePath=&quot;src/ellipsoid_tool.py&quot; -Prefactoring=&quot;add_comment&quot; -Pparameters=&quot;$PROJECT_DIR$/config.json&quot;" />
+      <option name="scriptParameters" value="-Prepository=&quot;git@github.com:DL4XRayTomoImaging-KIT/BinScale3D.git&quot; -PfilePath=&quot;src/binscale/converter.py&quot; -Prefactoring=&quot;rename_literal&quot; -Pparameters=&quot;$PROJECT_DIR$/configs/rename_literal.json&quot;" />
       <option name="taskDescriptions">
         <list />
       </option>
