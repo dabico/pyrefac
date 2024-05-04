@@ -26,7 +26,7 @@ dependencies {
 intellij {
     type.set("IC")
     version.set("2023.2.6")
-    plugins.set(emptyList())
+    plugins.set(listOfNotNull("Git4Idea"))
 }
 
 tasks {
