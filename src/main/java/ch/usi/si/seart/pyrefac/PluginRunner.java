@@ -1,18 +1,25 @@
 package ch.usi.si.seart.pyrefac;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.openapi.application.ApplicationStarter;
 import com.intellij.openapi.diagnostic.Logger;
 import groovyjarjarpicocli.CommandLine;
 import groovyjarjarpicocli.CommandLine.Command;
 import groovyjarjarpicocli.CommandLine.IExecutionExceptionHandler;
 import groovyjarjarpicocli.CommandLine.IParameterExceptionHandler;
+import groovyjarjarpicocli.CommandLine.ITypeConverter;
 import groovyjarjarpicocli.CommandLine.ParameterException;
 import groovyjarjarpicocli.CommandLine.Parameters;
 import groovyjarjarpicocli.CommandLine.ParseResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -68,17 +75,43 @@ public class PluginRunner implements ApplicationStarter {
     )
     private static final class PyRefac implements Callable<Integer> {
 
-        @Parameters(index = "0", description = "The URL of the Git repository")
+        private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+        @Parameters(
+                index = "0",
+                description = "The URL of the Git repository"
+        )
         private String url;
 
-        @Parameters(index = "1", description = "The path to the Python file to refactor")
+        @Parameters(
+                index = "1",
+                description = "The path to the Python file to refactor"
+        )
         private Path path;
 
-        @Parameters(index = "2", description = "The name of the refactoring to perform")
+        @Parameters(
+                index = "2",
+                description = "The name of the refactoring to perform"
+        )
         private Refactoring refactoring;
 
-        @Parameters(index = "3", description = "The configuration file, containing refactoring inputs")
-        private Path config;
+        @Parameters(
+                index = "3",
+                converter = JsonNodeConverter.class,
+                description = "The configuration file, containing refactoring inputs"
+        )
+        private JsonNode config;
+
+        private static final class JsonNodeConverter implements ITypeConverter<JsonNode> {
+
+            @Override
+            public JsonNode convert(String value) throws IOException {
+                File file = Paths.get(value).toFile();
+                if (!file.exists()) throw new FileNotFoundException("Not found: " + value);
+                if (!file.isFile()) throw new IllegalArgumentException("Not a file: " + value);
+                return OBJECT_MAPPER.readTree(file);
+            }
+        }
 
         @Override
         public Integer call() {
