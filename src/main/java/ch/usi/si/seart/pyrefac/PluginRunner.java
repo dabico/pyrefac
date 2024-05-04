@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.openapi.application.ApplicationStarter;
 import com.intellij.openapi.diagnostic.Logger;
+import git4idea.commands.Git;
+import git4idea.commands.GitCommandResult;
 import groovyjarjarpicocli.CommandLine;
 import groovyjarjarpicocli.CommandLine.Command;
 import groovyjarjarpicocli.CommandLine.IExecutionExceptionHandler;
@@ -18,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -115,10 +118,31 @@ public class PluginRunner implements ApplicationStarter {
 
         @Override
         public Integer call() {
-            LOG.warn("Repository:  " + url);
-            LOG.warn("File Path:   " + path);
-            LOG.warn("Refactoring: " + refactoring);
-            LOG.warn("Config:      " + config);
+            String tmpdir = System.getProperty("java.io.tmpdir");
+            Path parent = Path.of(tmpdir);
+            String dirname = "pyrefac-" + System.currentTimeMillis();
+            Path workdir = Paths.get(tmpdir, dirname);
+
+            Git git = Git.getInstance();
+            GitCommandResult result = git.clone(null, parent.toFile(), url, dirname);
+            if (!result.success()) {
+                LOG.error(result.getErrorOutputAsJoinedString());
+                return result.getExitCode();
+            }
+
+            try (AutomaticDirectoryCleaner ignored = new AutomaticDirectoryCleaner(workdir)) {
+                switch (refactoring) {
+                    case ADD_COMMENT:
+                    case RENAME_LITERAL:
+                    case RENAME_FUNCTION_PARAMETER:
+                        break;
+                    default:
+                        throw new UnsupportedOperationException("Refactoring type not implemented: " + refactoring);
+                }
+            } catch (IOException ex) {
+                throw new UncheckedIOException(ex);
+            }
+
             return 0;
         }
 
