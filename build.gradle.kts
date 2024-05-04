@@ -48,6 +48,9 @@ tasks {
             "-Didea.is.internal=false",
         )
     }
+    register("runPyRefac") {
+        dependsOn(runIde)
+    }
 
     patchPluginXml {
         sinceBuild.set("232")
