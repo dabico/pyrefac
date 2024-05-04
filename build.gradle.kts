@@ -6,6 +6,8 @@ plugins {
 group = "ch.usi.si.seart.pyrefac"
 version = "1.0.0-SNAPSHOT"
 
+val picocliVersion = "4.7.5"
+
 repositories {
     mavenCentral()
 }
@@ -13,6 +15,11 @@ repositories {
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+    implementation("info.picocli:picocli:${picocliVersion}")
+    annotationProcessor("info.picocli:picocli-codegen:${picocliVersion}")
 }
 
 // https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
@@ -23,6 +30,11 @@ intellij {
 }
 
 tasks {
+    compileJava {
+        val projectArgs = listOfNotNull("-Aproject=${project.group}/${project.name}")
+        options.compilerArgs.plusAssign(projectArgs)
+    }
+
     runIde {
         val repository: String? by project
         val filePath: String? by project
