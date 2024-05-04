@@ -1,0 +1,13 @@
+<!-- https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+  <id>ch.usi.si.seart.pyrefac</id>
+  <name>PyRefac</name>
+  <vendor email="ozren.dabic@usi.ch" url="https://dabico.github.io">Ozren Dabić</vendor>
+  <description>Performs various refactorings on Python code</description>
+  <depends>com.intellij.modules.platform</depends>
+
+  <!-- https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+  <extensions defaultExtensionNs="com.intellij">
+    <appStarter implementation="ch.usi.si.seart.pyrefac.PluginRunner"/>
+  </extensions>
+</idea-plugin>
