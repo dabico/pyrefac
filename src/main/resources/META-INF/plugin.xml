@@ -5,6 +5,7 @@
   <vendor email="ozren.dabic@usi.ch" url="https://dabico.github.io">Ozren Dabić</vendor>
   <description>Performs various refactorings on Python code</description>
   <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.python</depends>
   <depends>Git4Idea</depends>
 
   <!-- https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
