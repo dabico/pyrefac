@@ -6,6 +6,7 @@ import com.intellij.openapi.application.ApplicationStarter;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiManager;
@@ -111,7 +112,7 @@ public class PluginRunner implements ApplicationStarter {
 
             @Override
             public Class<? extends Refactoring> convert(String value) {
-                String className = StringUtils.snakeToTitleCase(value);
+                String className = StringUtil.toTitleCase(value).replace("_", "");
                 String packageName = Refactoring.class.getPackageName();
                 String fullyQualifiedName = packageName + "." + className;
 
