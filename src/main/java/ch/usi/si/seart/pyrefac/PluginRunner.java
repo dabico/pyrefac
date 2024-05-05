@@ -178,11 +178,14 @@ public class PluginRunner implements ApplicationStarter {
                         .map(PyFile.class::cast)
                         .orElseThrow(() -> new FileNotFoundException("Not found: " + absolute));
                 refactoring.perform(project, pyFile);
-                boolean modified = Optional.of(virtualFile)
-                        .map(documentManager::isFileModified)
-                        .orElse(false);
-                documentManager.saveAllDocuments();
-                return modified ? 0 : 1;
+                return Optional.of(virtualFile)
+                        .map(documentManager::getDocument)
+                        .filter(documentManager::isDocumentUnsaved)
+                        .map(document -> {
+                            documentManager.saveDocument(document);
+                            return 0;
+                        })
+                        .orElse(1);
             }
         }
 
