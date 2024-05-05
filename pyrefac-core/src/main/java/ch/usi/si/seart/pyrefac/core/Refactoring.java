@@ -1,4 +1,4 @@
-package ch.usi.si.seart.pyrefac;
+package ch.usi.si.seart.pyrefac.core;
 
 import com.intellij.openapi.project.Project;
 import com.jetbrains.python.psi.PyFile;

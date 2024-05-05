@@ -3,7 +3,7 @@
     <log_file alias="idea.log" path="$PROJECT_DIR$/build/idea-sandbox/system/log/idea.log" />
     <ExternalSystemSettings>
       <option name="executionName" />
-      <option name="externalProjectPath" value="$PROJECT_DIR$" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$/pyrefac-cli" />
       <option name="externalSystemIdString" value="GRADLE" />
       <option name="scriptParameters" value="-Prepository=&quot;git@github.com:DL4XRayTomoImaging-KIT/measuring-repo.git&quot; -PfilePath=&quot;src/ellipsoid_tool.py&quot; -Prefactoring=&quot;rename_function_parameters&quot; -Pparameters=&quot;$PROJECT_DIR$/configs/rename_function_parameters.json&quot;" />
       <option name="taskDescriptions">

@@ -1,9 +1,9 @@
-package ch.usi.si.seart.pyrefac;
+package ch.usi.si.seart.pyrefac.core;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-final class RenameLiteral extends FunctionRefactoring {
+public final class RenameLiteral extends FunctionRefactoring {
 
     private final String oldName;
     private final String newName;

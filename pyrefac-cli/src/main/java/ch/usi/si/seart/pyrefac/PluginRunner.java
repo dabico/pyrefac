@@ -1,5 +1,8 @@
 package ch.usi.si.seart.pyrefac;
 
+import ch.usi.si.seart.pyrefac.cli.ExecutionExceptionHandler;
+import ch.usi.si.seart.pyrefac.cli.ParameterExceptionHandler;
+import ch.usi.si.seart.pyrefac.cli.PyRefac;
 import com.intellij.openapi.application.ApplicationStarter;
 import groovyjarjarpicocli.CommandLine;
 import org.jetbrains.annotations.NotNull;

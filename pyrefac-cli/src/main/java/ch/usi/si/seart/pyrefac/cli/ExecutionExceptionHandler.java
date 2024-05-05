@@ -1,4 +1,4 @@
-package ch.usi.si.seart.pyrefac;
+package ch.usi.si.seart.pyrefac.cli;
 
 import groovyjarjarpicocli.CommandLine;
 import groovyjarjarpicocli.CommandLine.IExecutionExceptionHandler;
@@ -7,7 +7,7 @@ import groovyjarjarpicocli.CommandLine.ParseResult;
 import java.io.FileNotFoundException;
 import java.util.NoSuchElementException;
 
-class ExecutionExceptionHandler implements IExecutionExceptionHandler {
+public final class ExecutionExceptionHandler implements IExecutionExceptionHandler {
 
     private static final int USER_ERROR = 1;
     private static final int PLUGIN_ERROR = 127;

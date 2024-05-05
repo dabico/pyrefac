@@ -1,67 +1,36 @@
+group = "ch.usi.si.seart.pyrefac"
+version = "1.0.0-SNAPSHOT"
+
 plugins {
     id("java")
     id("org.jetbrains.intellij") version "1.17.3"
 }
 
-group = "ch.usi.si.seart.pyrefac"
-version = "1.0.0-SNAPSHOT"
+allprojects {
+    apply {
+        plugin("java")
+        plugin("org.jetbrains.intellij")
+    }
 
-val picocliVersion = "4.7.5"
+    repositories {
+        mavenCentral()
+    }
 
-repositories {
-    mavenCentral()
-}
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-
-dependencies {
-    implementation("info.picocli:picocli:${picocliVersion}")
-    annotationProcessor("info.picocli:picocli-codegen:${picocliVersion}")
-}
-
-// https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-// https://plugins.jetbrains.com/docs/intellij/intellij-community-plugins-extension-point-list.html
-intellij {
-    type.set("IC")
-    version.set("2023.2.6")
-    plugins.set(
-        listOfNotNull(
-            "Git4Idea",
-            "PythonCore:232.10300.40",
+    // https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
+    // https://plugins.jetbrains.com/docs/intellij/intellij-community-plugins-extension-point-list.html
+    intellij {
+        type.set("IC")
+        version.set("2023.2.6")
+        plugins.set(
+            listOfNotNull(
+                "Git4Idea",
+                "PythonCore:232.10300.40",
+            )
         )
-    )
-}
-
-tasks {
-    compileJava {
-        val projectArgs = listOfNotNull("-Aproject=${project.group}/${project.name}")
-        options.compilerArgs.plusAssign(projectArgs)
-    }
-
-    runIde {
-        val repository: String? by project
-        val filePath: String? by project
-        val refactoring: String? by project
-        val parameters: String? by project
-        args = listOfNotNull("pyrefac", repository, filePath, refactoring, parameters)
-        jvmArgs = listOf(
-            // https://oracle.com/technical-resources/articles/javase/headless.html
-            "-Djava.awt.headless=true",
-            // https://plugins.jetbrains.com/docs/intellij/enabling-internal.html
-            "-Didea.is.internal=false",
-            "-Xmx8G",
-        )
-        maxHeapSize = "8g"
-    }
-    register("runPyRefac") {
-        dependsOn(runIde)
-    }
-
-    patchPluginXml {
-        sinceBuild.set("232")
-        untilBuild.set("242.*")
     }
 }

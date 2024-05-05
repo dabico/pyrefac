@@ -1,9 +1,9 @@
-package ch.usi.si.seart.pyrefac;
+package ch.usi.si.seart.pyrefac.cli;
 
 import groovyjarjarpicocli.CommandLine.IParameterExceptionHandler;
 import groovyjarjarpicocli.CommandLine.ParameterException;
 
-class ParameterExceptionHandler implements IParameterExceptionHandler {
+public final class ParameterExceptionHandler implements IParameterExceptionHandler {
 
     @Override
     public int handleParseException(ParameterException ex, String[] ignored) {

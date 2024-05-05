@@ -1,5 +1,6 @@
-package ch.usi.si.seart.pyrefac;
+package ch.usi.si.seart.pyrefac.cli;
 
+import ch.usi.si.seart.pyrefac.core.Refactoring;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -33,7 +34,7 @@ import java.util.concurrent.Callable;
         mixinStandardHelpOptions = true,
         description = "Performs various refactorings on Python code"
 )
-final class PyRefac implements Callable<Integer> {
+public final class PyRefac implements Callable<Integer> {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

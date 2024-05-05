@@ -1,4 +1,4 @@
-package ch.usi.si.seart.pyrefac;
+package ch.usi.si.seart.pyrefac.core;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,7 +16,7 @@ import com.jetbrains.python.psi.PyStringLiteralExpression;
 
 import java.util.stream.Collectors;
 
-final class AddComment extends FunctionRefactoring {
+public final class AddComment extends FunctionRefactoring {
 
     private final String comment;
 
