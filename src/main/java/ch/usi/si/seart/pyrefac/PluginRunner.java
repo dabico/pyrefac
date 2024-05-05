@@ -3,7 +3,6 @@ package ch.usi.si.seart.pyrefac;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.openapi.application.ApplicationStarter;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -30,16 +29,14 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
 public class PluginRunner implements ApplicationStarter {
-
-    private static final Logger LOG = Logger.getInstance(PluginRunner.class);
 
     private static final ParameterExceptionHandler PARAMETER_HANDLER = new ParameterExceptionHandler();
 
@@ -47,7 +44,6 @@ public class PluginRunner implements ApplicationStarter {
 
         @Override
         public int handleParseException(ParameterException ex, String[] ignored) {
-            LOG.error("An error occurred while parsing the command line arguments", ex);
             return 1;
         }
     }
@@ -56,10 +52,20 @@ public class PluginRunner implements ApplicationStarter {
 
     private static final class ExecutionExceptionHandler implements IExecutionExceptionHandler {
 
+        private static final int USER_ERROR = 1;
+        private static final int PLUGIN_ERROR = 127;
+
         @Override
         public int handleExecutionException(Exception ex, CommandLine cmd, ParseResult parseResult) {
-            LOG.error("An error occurred while executing the command", ex);
-            return 1;
+            if (
+                    ex instanceof FileNotFoundException ||
+                            ex instanceof NoSuchElementException ||
+                            ex instanceof IllegalArgumentException
+            ) {
+                return USER_ERROR;
+            } else {
+                return PLUGIN_ERROR;
+            }
         }
     }
 
@@ -152,17 +158,14 @@ public class PluginRunner implements ApplicationStarter {
         }
 
         @Override
-        public Integer call() {
+        public Integer call() throws IOException, JDOMException {
             String tmpdir = System.getProperty("java.io.tmpdir");
             Path parent = Path.of(tmpdir);
             String dirname = "pyrefac-" + System.currentTimeMillis();
             Path workdir = Paths.get(tmpdir, dirname);
 
             GitCommandResult result = git.clone(null, parent.toFile(), url, dirname);
-            if (!result.success()) {
-                LOG.error(result.getErrorOutputAsJoinedString());
-                return result.getExitCode();
-            }
+            if (!result.success()) throw new IOException(result.getErrorOutputAsJoinedString());
 
             try (AutoCloseableProject closable = new AutoCloseableProject(workdir)) {
                 Path absolute = workdir.resolve(relative);
@@ -178,15 +181,9 @@ public class PluginRunner implements ApplicationStarter {
                 boolean modified = Optional.of(virtualFile)
                         .map(documentManager::isFileModified)
                         .orElse(false);
-                if (!modified) return 1;
                 documentManager.saveAllDocuments();
-            } catch (IOException ex) {
-                throw new UncheckedIOException(ex);
-            } catch (JDOMException ex) {
-                throw new IllegalStateException(ex);
+                return modified ? 0 : 1;
             }
-
-            return 0;
         }
 
         private final class AutoCloseableProject implements AutoCloseable {
