@@ -52,7 +52,9 @@ tasks {
             "-Djava.awt.headless=true",
             // https://plugins.jetbrains.com/docs/intellij/enabling-internal.html
             "-Didea.is.internal=false",
+            "-Xmx8G",
         )
+        maxHeapSize = "8g"
     }
     register("runPyRefac") {
         dependsOn(runIde)
