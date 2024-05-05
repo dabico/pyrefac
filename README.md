@@ -100,3 +100,57 @@ index 5f70dcd..1afb9be 100644
          if make_ax:
              fig = plt.figure()
 ```
+
+### `rename_function_parameters`
+
+Self-explanatory. Renames the parameter of a targeted function. Functions are identified by their name, as well as the
+class they reside in. To target functions within the root scope, the class name should be omitted. The refactoring will
+ensure that the parameter is renamed both in the function signature, and within the function body. Refactoring will fail
+if the parameter name is not found in the function signature, or if the new parameter name is already in use.
+
+#### Example
+
+```shell
+./pyrefac.sh git@github.com:DL4XRayTomoImaging-KIT/measuring-repo.git \
+            src/ellipsoid_tool.py \
+            rename_function_parameters \
+            config.json
+```
+
+Where `config.json` contains:
+
+```json
+{
+  "class": "EllipsoidTool",
+  "function": "plotEllipsoid",
+  "old_name": "cageAlpha",
+  "new_name": "cage_alpha"
+}
+```
+
+Should produce the following diff:
+
+```diff
+diff --git a/src/ellipsoid_tool.py b/src/ellipsoid_tool.py
+index 5f70dcd..e4110d2 100644
+--- a/src/ellipsoid_tool.py
++++ b/src/ellipsoid_tool.py
+@@ -70,7 +70,7 @@ class EllipsoidTool:
+         """Calculate the volume of the blob"""
+         return 4./3.*np.pi*radii[0]*radii[1]*radii[2]
+
+-    def plotEllipsoid(self, center, radii, rotation, ax=None, plotAxes=False, cageColor='b', cageAlpha=0.2):
++    def plotEllipsoid(self, center, radii, rotation, ax=None, plotAxes=False, cageColor='b', cage_alpha=0.2):
+         """Plot an ellipsoid"""
+         make_ax = ax == None
+         if make_ax:
+@@ -107,7 +107,7 @@ class EllipsoidTool:
+                 ax.plot(X3, Y3, Z3, color=cageColor)
+
+         # plot ellipsoid
+-        ax.plot_wireframe(x, y, z, rstride=4, cstride=4, color=cageColor, alpha=cageAlpha)
++        ax.plot_wireframe(x, y, z, rstride=4, cstride=4, color=cageColor, alpha=cage_alpha)
+
+         if make_ax:
+             plt.show()
+```

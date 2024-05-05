@@ -6,10 +6,10 @@ We invite you to dive into the development with IntelliJ Platform. Your test ass
 
 - [X] Write a CLI application that starts IntelliJ IDEA in headless mode, i.e. without UI;
 - [X] Upon startup, the program should clone a Git repository;
-- [ ] After that, it should apply one of the refactoring to a specified file:
+- [ ] After that, it should apply one of the refactorings to a specified file:
   - [X] `add_comment`
   - [ ] `rename_literal`
-  - [ ] `rename_function_parameters`
+  - [X] `rename_function_parameters`
 - [ ] The app should return the Unix `patch` that actually performs the changes;
 
 > [!NOTE]
