@@ -21,7 +21,10 @@ You can run the helper script from the terminal:
 
 Adds a [DocString](https://peps.python.org/pep-0257/) comment to a targeted function. Functions are identified by their
 name, as well as the class they reside in. To target functions within the root scope, the class name should be omitted.
-If the function already has a documentation comment, its contents will be replaced.
+If the function already has a documentation comment, its contents will be replaced. If the input comment does not
+contain any line breaks, the injected DocString will also be single-line. On the other hand, if the comment contains
+line breaks, the injected DocString will be multi-line. The refactoring will also ensure that the comment body is\
+properly indented.
 
 #### Example 1
 
@@ -73,7 +76,7 @@ Where `config.json` contains:
 {
   "class": "EllipsoidTool",
   "function": "plotEllipsoid",
-  "comment": "Plots an ellipsoid based on the provided center, radii, and rotation matrix. Allows plotting with custom color and transparency settings."
+  "comment": "Plots an ellipsoid based on the provided center, radii, and rotation matrix.\nAllows plotting with custom color and transparency settings."
 }
 ```
 
@@ -81,15 +84,18 @@ Should produce the following diff:
 
 ```diff
 diff --git a/src/ellipsoid_tool.py b/src/ellipsoid_tool.py
-index 5f70dcd..75be9f4 100644
+index 5f70dcd..1afb9be 100644
 --- a/src/ellipsoid_tool.py
 +++ b/src/ellipsoid_tool.py
-@@ -71,7 +71,7 @@ class EllipsoidTool:
+@@ -71,7 +71,10 @@ class EllipsoidTool:
          return 4./3.*np.pi*radii[0]*radii[1]*radii[2]
 
      def plotEllipsoid(self, center, radii, rotation, ax=None, plotAxes=False, cageColor='b', cageAlpha=0.2):
 -        """Plot an ellipsoid"""
-+        """Plots an ellipsoid based on the provided center, radii, and rotation matrix. Allows plotting with custom color and transparency settings."""
++        """
++        Plots an ellipsoid based on the provided center, radii, and rotation matrix.
++        Allows plotting with custom color and transparency settings.
++        """
          make_ax = ax == None
          if make_ax:
              fig = plt.figure()

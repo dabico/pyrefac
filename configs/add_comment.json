@@ -1,5 +1,5 @@
 {
   "class": "EllipsoidTool",
   "function": "plotEllipsoid",
-  "comment": "Plots an ellipsoid based on the provided center, radii, and rotation matrix. Allows plotting with custom color and transparency settings."
+  "comment": "Plots an ellipsoid based on the provided center, radii, and rotation matrix.\nAllows plotting with custom color and transparency settings."
 }
