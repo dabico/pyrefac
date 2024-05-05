@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellij.openapi.application.ApplicationStarter;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -168,6 +169,12 @@ public class PluginRunner implements ApplicationStarter {
                         .map(PyFile.class::cast)
                         .orElseThrow(() -> new FileNotFoundException("Not found: " + absolute));
                 refactoring.perform(project, pyFile);
+                FileDocumentManager documentManager = FileDocumentManager.getInstance();
+                boolean modified = Optional.of(virtualFile)
+                        .map(documentManager::isFileModified)
+                        .orElse(false);
+                if (!modified) return 1;
+                documentManager.saveAllDocuments();
             } catch (IOException ex) {
                 throw new UncheckedIOException(ex);
             } catch (JDOMException ex) {
