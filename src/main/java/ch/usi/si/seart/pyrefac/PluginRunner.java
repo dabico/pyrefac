@@ -6,6 +6,8 @@ import com.intellij.openapi.application.ApplicationStarter;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -89,6 +91,11 @@ public class PluginRunner implements ApplicationStarter {
 
         private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+        private final Git git = Git.getInstance();
+        private final ProjectManager projectManager = ProjectManager.getInstance();
+        private final VirtualFileManager fileManager = VirtualFileManager.getInstance();
+        private final FileDocumentManager documentManager = FileDocumentManager.getInstance();
+
         @Parameters(
                 index = "0",
                 description = "URL of the Git repository"
@@ -151,7 +158,6 @@ public class PluginRunner implements ApplicationStarter {
             String dirname = "pyrefac-" + System.currentTimeMillis();
             Path workdir = Paths.get(tmpdir, dirname);
 
-            Git git = Git.getInstance();
             GitCommandResult result = git.clone(null, parent.toFile(), url, dirname);
             if (!result.success()) {
                 LOG.error(result.getErrorOutputAsJoinedString());
@@ -163,14 +169,12 @@ public class PluginRunner implements ApplicationStarter {
                 Project project = closable.getProjectInstance();
                 Refactoring refactoring = OBJECT_MAPPER.treeToValue(config, type);
                 PsiManager psiManager = PsiManager.getInstance(project);
-                VirtualFileManager fileManager = VirtualFileManager.getInstance();
                 VirtualFile virtualFile = fileManager.findFileByNioPath(absolute);
                 PyFile pyFile = Optional.ofNullable(virtualFile)
                         .map(psiManager::findFile)
                         .map(PyFile.class::cast)
                         .orElseThrow(() -> new FileNotFoundException("Not found: " + absolute));
                 refactoring.perform(project, pyFile);
-                FileDocumentManager documentManager = FileDocumentManager.getInstance();
                 boolean modified = Optional.of(virtualFile)
                         .map(documentManager::isFileModified)
                         .orElse(false);
@@ -183,6 +187,27 @@ public class PluginRunner implements ApplicationStarter {
             }
 
             return 0;
+        }
+
+        private final class AutoCloseableProject implements AutoCloseable {
+
+            private final Path path;
+            private final Project project;
+
+            AutoCloseableProject(Path path) throws JDOMException, IOException {
+                this.path = path;
+                this.project = projectManager.loadAndOpenProject(path.toString());
+            }
+
+            public Project getProjectInstance() {
+                return project;
+            }
+
+            @Override
+            public void close() throws IOException {
+                projectManager.closeAndDispose(project);
+                FileUtil.delete(path);
+            }
         }
     }
 }
