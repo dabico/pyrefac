@@ -6,7 +6,7 @@ if uname -s | grep -iq cygwin ; then
     PWD=$(cygpath -w "$PWD")
 fi
 
-"$DIR/gradlew" -p "$DIR" runPyRefac \
+"$DIR/gradlew" -q -p "$DIR" runPyRefac \
   -Prepository="$1" \
   -PfilePath="$2" \
   -Prefactoring="$3" \
