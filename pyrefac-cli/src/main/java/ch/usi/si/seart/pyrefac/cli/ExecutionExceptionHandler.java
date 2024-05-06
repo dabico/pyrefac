@@ -1,5 +1,6 @@
 package ch.usi.si.seart.pyrefac.cli;
 
+import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 import groovyjarjarpicocli.CommandLine;
 import groovyjarjarpicocli.CommandLine.IExecutionExceptionHandler;
 import groovyjarjarpicocli.CommandLine.ParseResult;
@@ -14,15 +15,22 @@ public final class ExecutionExceptionHandler implements IExecutionExceptionHandl
 
     @Override
     public int handleExecutionException(Exception ex, CommandLine cmd, ParseResult parseResult) {
-        System.err.println(ex.getMessage());
+        int code = PLUGIN_ERROR;
+        String message = ex.getMessage();
+
         if (
                 ex instanceof FileNotFoundException ||
-                        ex instanceof NoSuchElementException ||
-                        ex instanceof IllegalArgumentException
+                ex instanceof NoSuchElementException ||
+                ex instanceof IllegalArgumentException
         ) {
-            return USER_ERROR;
-        } else {
-            return PLUGIN_ERROR;
+            code = USER_ERROR;
+        } else if (ex instanceof ValueInstantiationException vex) {
+            Throwable cause = vex.getCause();
+            message = cause != null ? cause.getMessage() : vex.getMessage();
+            code = USER_ERROR;
         }
+
+        System.err.println(message);
+        return code;
     }
 }
