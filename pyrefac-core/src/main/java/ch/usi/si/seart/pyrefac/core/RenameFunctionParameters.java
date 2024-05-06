@@ -13,8 +13,10 @@ import com.intellij.util.Query;
 import com.jetbrains.python.psi.PyFunction;
 import com.jetbrains.python.psi.PyNamedParameter;
 import com.jetbrains.python.psi.PyParameterList;
+import com.jetbrains.python.refactoring.PyRefactoringUtil;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public final class RenameFunctionParameters extends FunctionRefactoring {
 
@@ -29,24 +31,19 @@ public final class RenameFunctionParameters extends FunctionRefactoring {
             @JsonProperty("new_name") String newName
     ) {
         super(className, functionName);
-        this.oldName = oldName;
-        this.newName = newName;
+        this.oldName = Objects.requireNonNull(oldName, "Old parameter name must not be empty or null");
+        this.newName = Objects.requireNonNull(newName, "New parameter name must not be empty or null");
     }
 
     @Override
     protected void perform(PyFunction node) {
+        if (oldName.equals(newName)) return;
         Project project = node.getProject();
         PyParameterList parameters = node.getParameterList();
-        PyNamedParameter conflicting = parameters.findParameterByName(newName);
-        if (conflicting != null) {
-            String message = "Parameter " + newName + " already exists in function " + node.getName();
-            throw new IllegalArgumentException(message);
-        }
         PyNamedParameter target = parameters.findParameterByName(oldName);
-        if (target == null) {
-            String message = "Parameter " + oldName + " not found in function " + node.getName();
-            throw new NoSuchElementException(message);
-        }
+        if (target == null) throw new NoSuchElementException("Parameter \"" + oldName + "\" not found");
+        boolean canRename = PyRefactoringUtil.isValidNewName(newName, target);
+        if (!canRename) throw new IllegalArgumentException("Identifier \"" + newName + "\" already in use");
         ThrowableComputable<PsiElement, RuntimeException> action = () -> {
             LocalSearchScope searchScope = new LocalSearchScope(node);
             Query<PsiReference> references = ReferencesSearch.search(target, searchScope);
