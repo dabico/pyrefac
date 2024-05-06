@@ -14,6 +14,7 @@ public class PluginRunner implements ApplicationStarter {
 
     @Override
     @Nullable
+    @SuppressWarnings({"deprecation", "RedundantSuppression"})
     public String getCommandName() {
         return "pyrefac";
     }
