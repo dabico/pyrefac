@@ -118,7 +118,7 @@ public final class PyRefac implements Callable<Integer> {
                     .map(psiManager::findFile)
                     .map(PyFile.class::cast)
                     .orElseThrow(() -> new FileNotFoundException("Not found: " + absolute));
-            refactoring.perform(project, pyFile);
+            refactoring.perform(pyFile);
             return Optional.of(virtualFile)
                     .map(documentManager::getDocument)
                     .filter(documentManager::isDocumentUnsaved)

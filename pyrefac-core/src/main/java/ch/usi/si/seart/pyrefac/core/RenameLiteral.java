@@ -2,6 +2,7 @@ package ch.usi.si.seart.pyrefac.core;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.jetbrains.python.psi.PyFunction;
 
 public final class RenameLiteral extends FunctionRefactoring {
 
@@ -18,5 +19,9 @@ public final class RenameLiteral extends FunctionRefactoring {
         super(className, functionName);
         this.oldName = oldName;
         this.newName = newName;
+    }
+
+    @Override
+    protected void perform(PyFunction node) {
     }
 }

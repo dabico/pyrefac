@@ -1,8 +1,5 @@
 package ch.usi.si.seart.pyrefac.core;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
 import com.jetbrains.python.psi.PyClass;
 import com.jetbrains.python.psi.PyFile;
 import com.jetbrains.python.psi.PyFunction;
@@ -21,14 +18,10 @@ abstract class FunctionRefactoring implements Refactoring {
         this.functionName = functionName;
     }
 
-    protected void perform(Project ignored, PyFunction node) {
-        Logger log = Logger.getInstance(getClass());
-        TextRange range = node.getTextRange();
-        log.warn("Targeting node at: " + range);
-    }
+    protected abstract void perform(PyFunction node);
 
     @Override
-    public final void perform(Project project, PyFile file) {
+    public final void perform(PyFile file) {
         file.accept(new PyRecursiveElementVisitor() {
 
             @Override
@@ -38,7 +31,7 @@ abstract class FunctionRefactoring implements Refactoring {
                     PyClass containingClass = node.getContainingClass();
                     String containingClassName = containingClass != null ? containingClass.getName() : null;
                     if (Objects.equals(containingClassName, className)) {
-                        perform(project, node);
+                        perform(node);
                     }
                 }
             }

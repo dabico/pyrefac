@@ -34,7 +34,8 @@ public final class RenameFunctionParameters extends FunctionRefactoring {
     }
 
     @Override
-    protected void perform(Project project, PyFunction node) {
+    protected void perform(PyFunction node) {
+        Project project = node.getProject();
         PyParameterList parameters = node.getParameterList();
         PyNamedParameter conflicting = parameters.findParameterByName(newName);
         if (conflicting != null) {

@@ -31,7 +31,8 @@ public final class AddComment extends FunctionRefactoring {
     }
 
     @Override
-    protected void perform(Project project, PyFunction node) {
+    protected void perform(PyFunction node) {
+        Project project = node.getProject();
         PyStringLiteralExpression existing = node.getDocStringExpression();
         PyStatementList statements = node.getStatementList();
         int relativeStartOffset = statements.getStartOffsetInParent();
