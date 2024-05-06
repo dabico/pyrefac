@@ -15,7 +15,9 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiManager;
 import com.jetbrains.python.psi.PyFile;
 import git4idea.commands.Git;
+import git4idea.commands.GitCommand;
 import git4idea.commands.GitCommandResult;
+import git4idea.commands.GitLineHandler;
 import groovyjarjarpicocli.CommandLine.Command;
 import groovyjarjarpicocli.CommandLine.ITypeConverter;
 import groovyjarjarpicocli.CommandLine.Parameters;
@@ -109,7 +111,13 @@ public final class PyRefac implements Callable<Integer> {
         Project project = projectManager.loadAndOpenProject(workdir.toString());
         if (project == null) throw new IOException("Failed to open project: " + workdir);
         try {
-            return call(workdir, project);
+            Integer code = call(workdir, project);
+            if (code != 0) return code;
+            GitLineHandler handler = new GitLineHandler(project, workdir.toFile(), GitCommand.DIFF);
+            result = git.runCommand(handler);
+            if (!result.success()) throw new IOException(result.getErrorOutputAsJoinedString());
+            System.out.println(result.getOutputAsJoinedString());
+            return code;
         } finally {
             projectManager.closeAndDispose(project);
             FileUtil.delete(workdir);
