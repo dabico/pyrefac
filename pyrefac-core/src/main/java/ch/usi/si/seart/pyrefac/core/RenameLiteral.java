@@ -8,6 +8,7 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.LocalSearchScope;
 import com.jetbrains.python.psi.PyAssignmentStatement;
+import com.jetbrains.python.psi.PyClass;
 import com.jetbrains.python.psi.PyFunction;
 import com.jetbrains.python.psi.PyStatementList;
 import com.jetbrains.python.psi.PyTargetExpression;
@@ -47,7 +48,8 @@ public final class RenameLiteral extends FunctionRefactoring {
         if (assignment.getLeftHandSideExpression() instanceof PyTargetExpression target) {
             boolean canRename = PyRefactoringUtil.isValidNewName(newName, target);
             if (!canRename) throw new IllegalArgumentException("Identifier \"" + newName + "\" already in use");
-            LocalSearchScope scope = new LocalSearchScope(node);
+            PyClass parent = node.getContainingClass();
+            LocalSearchScope scope = new LocalSearchScope(parent != null ? parent : node);
             ThrowableComputable<PsiElement, RuntimeException> action = getRenameAction(scope, target, newName);
             WriteCommandAction.runWriteCommandAction(project, action);
         }
