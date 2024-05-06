@@ -27,7 +27,7 @@ public final class AddComment extends FunctionRefactoring {
             @JsonProperty("function") String functionName,
             @JsonProperty("comment") String comment
     ) {
-        super(className, functionName);
+        super(className, Objects.requireNonNull(functionName, "Function name must not be empty or null"));
         this.comment = Objects.requireNonNull(comment, "Comment must not be empty or null");
     }
 
