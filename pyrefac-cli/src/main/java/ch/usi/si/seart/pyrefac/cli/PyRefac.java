@@ -103,29 +103,16 @@ public final class PyRefac implements Callable<Integer> {
     @Override
     public Integer call() throws IOException, JDOMException {
         Path workdir = getWorkdir();
-
-        GitCommandResult result = git.clone(null, workdir.getParent().toFile(), url, workdir.getFileName().toString());
+        Path parent = workdir.getParent();
+        GitCommandResult result = git.clone(null, parent.toFile(), url, workdir.getFileName().toString());
         if (!result.success()) throw new IOException(result.getErrorOutputAsJoinedString());
-
-        try (AutoCloseableProject closable = new AutoCloseableProject(workdir)) {
-            Path absolute = workdir.resolve(relative);
-            Project project = closable.getProjectInstance();
-            Refactoring refactoring = JSON_MAPPER.treeToValue(config, type);
-            PsiManager psiManager = PsiManager.getInstance(project);
-            VirtualFile virtualFile = fileManager.findFileByNioPath(absolute);
-            PyFile pyFile = Optional.ofNullable(virtualFile)
-                    .map(psiManager::findFile)
-                    .map(PyFile.class::cast)
-                    .orElseThrow(() -> new FileNotFoundException("Not found: " + absolute));
-            refactoring.perform(pyFile);
-            return Optional.of(virtualFile)
-                    .map(documentManager::getDocument)
-                    .filter(documentManager::isDocumentUnsaved)
-                    .map(document -> {
-                        documentManager.saveDocument(document);
-                        return 0;
-                    })
-                    .orElse(1);
+        Project project = projectManager.loadAndOpenProject(workdir.toString());
+        if (project == null) throw new IOException("Failed to open project: " + workdir);
+        try {
+            return call(workdir, project);
+        } finally {
+            projectManager.closeAndDispose(project);
+            FileUtil.delete(workdir);
         }
     }
 
@@ -136,24 +123,23 @@ public final class PyRefac implements Callable<Integer> {
         return Paths.get(tmpdir, dirname);
     }
 
-    private final class AutoCloseableProject implements AutoCloseable {
-
-        private final Path path;
-        private final Project project;
-
-        AutoCloseableProject(Path path) throws JDOMException, IOException {
-            this.path = path;
-            this.project = projectManager.loadAndOpenProject(path.toString());
-        }
-
-        public Project getProjectInstance() {
-            return project;
-        }
-
-        @Override
-        public void close() throws IOException {
-            projectManager.closeAndDispose(project);
-            FileUtil.delete(path);
-        }
+    private Integer call(Path workdir, Project project) throws IOException {
+        PsiManager psiManager = PsiManager.getInstance(project);
+        Path absolute = workdir.resolve(relative);
+        Refactoring refactoring = JSON_MAPPER.treeToValue(config, type);
+        VirtualFile virtualFile = fileManager.findFileByNioPath(absolute);
+        PyFile pyFile = Optional.ofNullable(virtualFile)
+                .map(psiManager::findFile)
+                .map(PyFile.class::cast)
+                .orElseThrow(() -> new FileNotFoundException("Not found: " + absolute));
+        refactoring.perform(pyFile);
+        return Optional.of(virtualFile)
+                .map(documentManager::getDocument)
+                .filter(documentManager::isDocumentUnsaved)
+                .map(document -> {
+                    documentManager.saveDocument(document);
+                    return 0;
+                })
+                .orElse(1);
     }
 }
