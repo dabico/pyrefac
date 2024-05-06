@@ -1,6 +1,6 @@
 {
-  "class": "Converter",
-  "function": "__init__",
-  "old_name": "_dis",
-  "new_name": "disjoint_distribution"
+  "class": "",
+  "function": "radius_axial",
+  "new_name": "radius_before_center",
+  "old_name": "r1"
 }
