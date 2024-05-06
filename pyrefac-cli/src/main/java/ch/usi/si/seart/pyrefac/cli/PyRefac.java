@@ -1,8 +1,10 @@
 package ch.usi.si.seart.pyrefac.cli;
 
 import ch.usi.si.seart.pyrefac.core.Refactoring;
+import ch.usi.si.seart.pyrefac.jackson.PyRefacModule;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -36,7 +38,7 @@ import java.util.concurrent.Callable;
 )
 public final class PyRefac implements Callable<Integer> {
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper JSON_MAPPER = JsonMapper.builder().addModule(new PyRefacModule()).build();
 
     private final Git git = Git.getInstance();
     private final ProjectManager projectManager = ProjectManager.getInstance();
@@ -94,7 +96,7 @@ public final class PyRefac implements Callable<Integer> {
             File file = Paths.get(value).toFile();
             if (!file.exists()) throw new FileNotFoundException("Not found: " + value);
             if (!file.isFile()) throw new IllegalArgumentException("Not a file: " + value);
-            return OBJECT_MAPPER.readTree(file);
+            return JSON_MAPPER.readTree(file);
         }
     }
 
@@ -111,7 +113,7 @@ public final class PyRefac implements Callable<Integer> {
         try (AutoCloseableProject closable = new AutoCloseableProject(workdir)) {
             Path absolute = workdir.resolve(relative);
             Project project = closable.getProjectInstance();
-            Refactoring refactoring = OBJECT_MAPPER.treeToValue(config, type);
+            Refactoring refactoring = JSON_MAPPER.treeToValue(config, type);
             PsiManager psiManager = PsiManager.getInstance(project);
             VirtualFile virtualFile = fileManager.findFileByNioPath(absolute);
             PyFile pyFile = Optional.ofNullable(virtualFile)
