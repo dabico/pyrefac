@@ -10,6 +10,6 @@
 
   <!-- https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
   <extensions defaultExtensionNs="com.intellij">
-    <appStarter implementation="ch.usi.si.seart.pyrefac.PluginRunner"/>
+    <appStarter id="pyrefac" implementation="ch.usi.si.seart.pyrefac.PluginRunner"/>
   </extensions>
 </idea-plugin>
