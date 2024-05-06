@@ -106,14 +106,16 @@ public final class PyRefac implements Callable<Integer> {
     public Integer call() throws IOException, JDOMException {
         Path workdir = getWorkdir();
         Path parent = workdir.getParent();
-        GitCommandResult result = git.clone(null, parent.toFile(), url, workdir.getFileName().toString());
+        GitLineHandler handler = new GitLineHandler(null, parent.toFile(), GitCommand.CLONE);
+        handler.addParameters(url, workdir.toString(), "--depth=1");
+        GitCommandResult result = git.runCommand(handler);
         if (!result.success()) throw new IOException(result.getErrorOutputAsJoinedString());
         Project project = projectManager.loadAndOpenProject(workdir.toString());
         if (project == null) throw new IOException("Failed to open project: " + workdir);
         try {
             Integer code = call(workdir, project);
             if (code != 0) return code;
-            GitLineHandler handler = new GitLineHandler(project, workdir.toFile(), GitCommand.DIFF);
+            handler = new GitLineHandler(project, workdir.toFile(), GitCommand.DIFF);
             result = git.runCommand(handler);
             if (!result.success()) throw new IOException(result.getErrorOutputAsJoinedString());
             System.out.println(result.getOutputAsJoinedString());
