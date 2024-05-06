@@ -102,12 +102,9 @@ public final class PyRefac implements Callable<Integer> {
 
     @Override
     public Integer call() throws IOException, JDOMException {
-        String tmpdir = System.getProperty("java.io.tmpdir");
-        Path parent = Path.of(tmpdir);
-        String dirname = getClass().getSimpleName().toLowerCase() + "-" + System.currentTimeMillis();
-        Path workdir = Paths.get(tmpdir, dirname);
+        Path workdir = getWorkdir();
 
-        GitCommandResult result = git.clone(null, parent.toFile(), url, dirname);
+        GitCommandResult result = git.clone(null, workdir.getParent().toFile(), url, workdir.getFileName().toString());
         if (!result.success()) throw new IOException(result.getErrorOutputAsJoinedString());
 
         try (AutoCloseableProject closable = new AutoCloseableProject(workdir)) {
@@ -130,6 +127,13 @@ public final class PyRefac implements Callable<Integer> {
                     })
                     .orElse(1);
         }
+    }
+
+    private static Path getWorkdir() {
+        String tmpdir = System.getProperty("java.io.tmpdir");
+        String prefix = PyRefac.class.getSimpleName().toLowerCase();
+        String dirname = prefix + "-" + System.currentTimeMillis();
+        return Paths.get(tmpdir, dirname);
     }
 
     private final class AutoCloseableProject implements AutoCloseable {
