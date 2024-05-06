@@ -6,10 +6,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.util.Query;
 import com.jetbrains.python.psi.PyFunction;
 import com.jetbrains.python.psi.PyNamedParameter;
 import com.jetbrains.python.psi.PyParameterList;
@@ -44,14 +41,8 @@ public final class RenameFunctionParameters extends FunctionRefactoring {
         if (target == null) throw new NoSuchElementException("Parameter \"" + oldName + "\" not found");
         boolean canRename = PyRefactoringUtil.isValidNewName(newName, target);
         if (!canRename) throw new IllegalArgumentException("Identifier \"" + newName + "\" already in use");
-        ThrowableComputable<PsiElement, RuntimeException> action = () -> {
-            LocalSearchScope searchScope = new LocalSearchScope(node);
-            Query<PsiReference> references = ReferencesSearch.search(target, searchScope);
-            references.forEach(reference -> {
-                reference.handleElementRename(newName);
-            });
-            return target.setName(newName);
-        };
+        LocalSearchScope scope = new LocalSearchScope(node);
+        ThrowableComputable<PsiElement, RuntimeException> action = getRenameAction(scope, target, newName);
         WriteCommandAction.runWriteCommandAction(project, action);
     }
 }

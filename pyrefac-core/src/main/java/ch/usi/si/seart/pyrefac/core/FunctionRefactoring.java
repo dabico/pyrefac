@@ -1,5 +1,12 @@
 package ch.usi.si.seart.pyrefac.core;
 
+import com.intellij.openapi.util.ThrowableComputable;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.search.SearchScope;
+import com.intellij.psi.search.searches.ReferencesSearch;
+import com.intellij.util.Query;
 import com.jetbrains.python.psi.PyClass;
 import com.jetbrains.python.psi.PyFile;
 import com.jetbrains.python.psi.PyFunction;
@@ -7,6 +14,7 @@ import com.jetbrains.python.psi.PyRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 abstract class FunctionRefactoring implements Refactoring {
 
@@ -36,5 +44,16 @@ abstract class FunctionRefactoring implements Refactoring {
                 }
             }
         });
+    }
+
+    protected static <P extends PsiNamedElement> ThrowableComputable<PsiElement, RuntimeException> getRenameAction(
+            SearchScope searchScope, P target, String name
+    ) {
+        return () -> {
+            Query<PsiReference> references = ReferencesSearch.search(target, searchScope);
+            Consumer<PsiReference> consumer = reference -> reference.handleElementRename(name);
+            references.forEach(consumer);
+            return target.setName(name);
+        };
     }
 }
