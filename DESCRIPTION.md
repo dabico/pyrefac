@@ -31,7 +31,6 @@ The following requirements should be met:
 ## Testing
 
 For testing, we attached a `test.yaml` with some data.
-```
 
 ## Timeline
 
