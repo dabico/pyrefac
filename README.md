@@ -9,13 +9,13 @@
 
 ### Gradle Task
 
-You can run the application using the Gradle task:
+You can run the plugin using the Gradle task:
 
 ```shell
 ./gradlew runPyRefac -Prepository="$GIT_REPOSITORY_URL" \
-                     -PfilePath="$GIT_REPOSITORY_FILE_PATH" \
-                     -Prefactoring="$REFACTORING_NAME" \
-                     -Pparameters="$REFACTORING_CONFIG_PATH"
+                    -PfilePath="$GIT_REPOSITORY_FILE_PATH" \
+                    -Prefactoring="$REFACTORING_NAME" \
+                    -Pparameters="$REFACTORING_CONFIG_PATH"
 ```
 
 Where:
@@ -27,9 +27,11 @@ Where:
 | `$REFACTORING_NAME`         | Either `add_comment`, `rename_literal`, or `rename_function_parameters`              |
 | `$REFACTORING_CONFIG_PATH`  | _Relative_ path to the JSON configuration file containing the refactoring parameters |
 
+IntelliJ run configurations are also provided for easier debugging.
+
 ### Command Line Interface (CLI)
 
-For convenience, a helper script is provided to run the application:
+For convenience, a helper script is provided to run the plugin:
 
 ```shell
 ./pyrefac.sh $GIT_REPOSITORY_URL $GIT_REPOSITORY_FILE_PATH $REFACTORING_NAME $REFACTROING_CONFIG_PATH
