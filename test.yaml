@@ -1,0 +1,206 @@
+- refactorings:
+  - parameters:
+      class: Scaler
+      comment: Processes and scales the given image using dask operations. Converts
+        integer-typed images to float32, applies scaling with overlap, and then reverts
+        to integer type if necessary.
+      function: __call__
+    path: src/binscale/scaler.py
+    refactoring_function: add_comment
+  - parameters:
+      class: Scaler
+      comment: Initialize the Scaler with a specific scaling factor.
+      function: __init__
+    path: src/binscale/scaler.py
+    refactoring_function: add_comment
+  - parameters:
+      class: Converter
+      comment: Initialize the Converter class with configuration for percentile thresholds,
+        output format, and optional transformations such as sigmoid adjustment and
+        disjoint distribution handling.
+      function: __init__
+    path: src/binscale/converter.py
+    refactoring_function: add_comment
+  - parameters:
+      class: Converter
+      comment: Scale the image based on provided thresholds and optional sigmoid transformation,
+        applying settings based on instance configuration.
+      function: _scale
+    path: src/binscale/converter.py
+    refactoring_function: add_comment
+  - parameters:
+      class: ''
+      comment: Calculate the disjoint thresholds for given arrays rs and ors using
+        the specified percentile values.
+      function: get_disjoint_thresholds
+    path: src/binscale/converter.py
+    refactoring_function: add_comment
+  - parameters:
+      class: ''
+      comment: Generate random outer voxels from the image based on a beta distribution.
+      function: get_random_outter_voxels
+    path: src/binscale/converter.py
+    refactoring_function: add_comment
+  - parameters:
+      class: Converter
+      function: _scale
+      new_name: lower_percentile
+      old_name: f
+    path: src/binscale/converter.py
+    refactoring_function: rename_literal
+  - parameters:
+      class: Converter
+      function: _scale
+      new_name: upper_percentile
+      old_name: t
+    path: src/binscale/converter.py
+    refactoring_function: rename_literal
+  - parameters:
+      class: Converter
+      function: __init__
+      new_name: from_threshold
+      old_name: _f
+    path: src/binscale/converter.py
+    refactoring_function: rename_literal
+  - parameters:
+      class: Converter
+      function: __init__
+      new_name: to_threshold
+      old_name: _t
+    path: src/binscale/converter.py
+    refactoring_function: rename_literal
+  - parameters:
+      class: Converter
+      function: __init__
+      new_name: apply_sigmoid
+      old_name: _s
+    path: src/binscale/converter.py
+    refactoring_function: rename_literal
+  - parameters:
+      class: Converter
+      function: __init__
+      new_name: disjoint_distribution
+      old_name: _dis
+    path: src/binscale/converter.py
+    refactoring_function: rename_literal
+  repository: git@github.com:DL4XRayTomoImaging-KIT/BinScale3D.git
+- refactorings:
+  - parameters:
+      class: EllipsoidTool
+      comment: Initialize the EllipsoidTool class without any properties.
+      function: __init__
+    path: src/ellipsoid_tool.py
+    refactoring_function: add_comment
+  - parameters:
+      class: EllipsoidTool
+      comment: Calculates the minimum volume ellipsoid that encloses all input points
+        using the Khachiyan Algorithm.
+      function: getMinVolEllipse
+    path: src/ellipsoid_tool.py
+    refactoring_function: add_comment
+  - parameters:
+      class: EllipsoidTool
+      comment: Calculates the volume of an ellipsoid given its radii.
+      function: getEllipsoidVolume
+    path: src/ellipsoid_tool.py
+    refactoring_function: add_comment
+  - parameters:
+      class: EllipsoidTool
+      comment: Plots an ellipsoid based on the provided center, radii, and rotation
+        matrix. Allows plotting with custom color and transparency settings.
+      function: plotEllipsoid
+    path: src/ellipsoid_tool.py
+    refactoring_function: add_comment
+  - parameters:
+      class: EllipsoidTool
+      function: plotEllipsoid
+      new_name: cage_color
+      old_name: cageColor
+    path: src/ellipsoid_tool.py
+    refactoring_function: rename_function_parameters
+  - parameters:
+      class: EllipsoidTool
+      function: plotEllipsoid
+      new_name: cage_alpha
+      old_name: cageAlpha
+    path: src/ellipsoid_tool.py
+    refactoring_function: rename_function_parameters
+  - parameters:
+      class: ''
+      comment: Recursively converts numerical types in a nested structure to their
+        corresponding Python types.
+      function: recurrent_cleaner
+    path: src/measures.py
+    refactoring_function: add_comment
+  - parameters:
+      class: ''
+      comment: Decorator to apply an organ measurement function to markup and volume.
+      function: organ_measure
+    path: src/measures.py
+    refactoring_function: add_comment
+  - parameters:
+      class: ''
+      comment: Decorator to apply a metric along three axes of a 3D markup array.
+      function: axial_apply
+    path: src/measures.py
+    refactoring_function: add_comment
+  - parameters:
+      class: ''
+      comment: Applies a specified metric to a given markup and volume, with optional
+        modification.
+      function: organ_metric
+    path: src/measures.py
+    refactoring_function: add_comment
+  - parameters:
+      class: ''
+      function: thickness_axial
+      new_name: thickness_before_center
+      old_name: t1
+    path: src/measures.py
+    refactoring_function: rename_literal
+  - parameters:
+      class: ''
+      function: thickness_axial
+      new_name: thickness_after_center
+      old_name: t2
+    path: src/measures.py
+    refactoring_function: rename_literal
+  - parameters:
+      class: ''
+      function: radius_axial
+      new_name: radius_before_center
+      old_name: r1
+    path: src/measures.py
+    refactoring_function: rename_literal
+  - parameters:
+      class: ''
+      function: radius_axial
+      new_name: radius_after_center
+      old_name: r2
+    path: src/measures.py
+    refactoring_function: rename_literal
+  - parameters:
+      class: organ_metric
+      function: markup
+      old_name: segmentation_mask
+    path: src/measures.py
+    refactoring_function: rename_function_parameters
+  - parameters:
+      class: organ_metric
+      function: volume
+      old_name: voxel_data
+    path: src/measures.py
+    refactoring_function: rename_function_parameters
+  - parameters:
+      class: organ_measure
+      function: markup
+      old_name: segmentation_mask
+    path: src/measures.py
+    refactoring_function: rename_function_parameters
+  - parameters:
+      class: organ_measure
+      function: volume
+      old_name: voxel_data
+    path: src/measures.py
+    refactoring_function: rename_function_parameters
+  repository: git@github.com:DL4XRayTomoImaging-KIT/measuring-repo.git
