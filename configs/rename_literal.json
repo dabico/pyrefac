@@ -1,6 +1,6 @@
 {
-  "class": "",
-  "function": "radius_axial",
-  "new_name": "radius_before_center",
-  "old_name": "r1"
+  "class": "Converter",
+  "function": "_scale",
+  "new_name": "upper_percentile",
+  "old_name": "t"
 }
