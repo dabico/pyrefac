@@ -6,8 +6,10 @@ if uname -s | grep -iq cygwin ; then
     PWD=$(cygpath -w "$PWD")
 fi
 
+TERM=dumb
 "$DIR/gradlew" -q -p "$DIR" runPyRefac \
   -Prepository="$1" \
   -PfilePath="$2" \
   -Prefactoring="$3" \
-  -Pparameters="$PWD/$4"
+  -Pparameters="$PWD/$4" \
+  -Dorg.gradle.console=plain
