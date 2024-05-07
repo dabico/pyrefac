@@ -7,13 +7,35 @@
 
 ## Running
 
+### Gradle Task
+
+You can run the application using the Gradle task:
+
+```shell
+./gradlew runPyRefac -Prepository="$GIT_REPOSITORY_URL" \
+                     -PfilePath="$GIT_REPOSITORY_FILE_PATH" \
+                     -Prefactoring="$REFACTORING_NAME" \
+                     -Pparameters="$REFACTORING_CONFIG_PATH"
+```
+
+Where:
+
+| Parameter                   | Description                                                                          |
+|-----------------------------|--------------------------------------------------------------------------------------|
+| `$GIT_REPOSITORY_URL`       | URL of the Git repository to clone. Can be either an HTTPS or SSH                    |
+| `$GIT_REPOSITORY_FILE_PATH` | Repository root-relative path of the file to refactor                                |
+| `$REFACTORING_NAME`         | Either `add_comment`, `rename_literal`, or `rename_function_parameters`              |
+| `$REFACTORING_CONFIG_PATH`  | _Relative_ path to the JSON configuration file containing the refactoring parameters |
+
 ### Command Line Interface (CLI)
 
-You can run the helper script from the terminal:
+For convenience, a helper script is provided to run the application:
 
 ```shell
 ./pyrefac.sh $GIT_REPOSITORY_URL $GIT_REPOSITORY_FILE_PATH $REFACTORING_NAME $REFACTROING_CONFIG_PATH
 ```
+
+The parameters are the same as the Gradle task.
 
 ## Supported Refactorings
 
