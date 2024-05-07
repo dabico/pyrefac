@@ -101,6 +101,107 @@ index 5f70dcd..1afb9be 100644
              fig = plt.figure()
 ```
 
+### `rename_literal`
+
+Renames a local variable or class attribute reference within a targeted function. Functions are identified by their
+name, as well as the class they reside in. To target functions within the root scope, the class name should be omitted.
+If the refactoring target is a local variable, the refactoring will ensure that the variable is renamed in its
+definition, and all subsequent references within the body. If the refactoring target is a class attribute, the
+refactoring will ensure that the attribute is renamed in its definition, and all subsequent references within the class.
+Refactoring will fail if the provided name is not found, or if the new name is already in use.
+
+#### Example 1
+
+```shell
+./pyrefac.sh git@github.com:DL4XRayTomoImaging-KIT/measuring-repo.git \
+            src/measures.py \
+            rename_literal \
+            config.json
+```
+
+Where `config.json` contains:
+
+```json
+{
+  "class": "",
+  "function": "radius_axial",
+  "new_name": "radius_before_center",
+  "old_name": "r1"
+}
+```
+
+Should produce the following diff:
+
+```diff
+diff --git a/src/measures.py b/src/measures.py
+index e566219..b1ac510 100644
+--- a/src/measures.py
++++ b/src/measures.py
+@@ -202,9 +202,9 @@ def thickness_axial(markup, line, center):
+ def radius_axial(markup, line, center):
+     """For each direction along of one of three axis calculate distance between center and last segmented pixel"""
+     touched = np.where(markup[tuple(line)])[0]
+-    r1 = center - touched[0]
++    radius_before_center = center - touched[0]
+     r2 = touched[-1] - center
+-    return (r1, r2)
++    return (radius_before_center, r2)
+
+ def get_radii(markup):
+     mp = np.dstack(np.where(markup))[0] # marked points
+```
+
+#### Example 2
+
+```shell
+./pyrefac.sh git@github.com:DL4XRayTomoImaging-KIT/BinScale3D.git \
+            src/binscale/converter.py \
+            rename_literal \
+            config.json
+```
+
+Where `config.json` contains:
+
+```json
+{
+  "class": "Converter",
+  "function": "__init__",
+  "new_name": "to_threshold",
+  "old_name": "_t"
+}
+```
+
+Should produce the following diff:
+
+```diff
+diff --git a/src/binscale/converter.py b/src/binscale/converter.py
+index c45c22a..5107d73 100644
+--- a/src/binscale/converter.py
++++ b/src/binscale/converter.py
+@@ -29,7 +29,7 @@ def get_disjoint_thresholds(rs, ors, f=1, t=99.95):
+ class Converter:
+     def __init__(self, from_percentile=1, to_percentile=99.95, apply_sigmoid=False, disjoint_distributions=False, to_format='uint8', autoscale=True):
+         self._f = from_percentile
+-        self._t = to_percentile
++        self.to_threshold = to_percentile
+         self._s = apply_sigmoid
+         self._dis = disjoint_distributions
+         self.to_format = to_format
+@@ -50,10 +50,10 @@ class Converter:
+     @dasked
+     def _scale(self, img, rs, ors):
+         if self._dis:
+-            f, t = get_disjoint_thresholds(rs, ors, self._f, self._t)
++            f, t = get_disjoint_thresholds(rs, ors, self._f, self.to_threshold)
+         else:
+             f = np.percentile(rs, self._f)
+-            t = np.percentile(rs, self._t)
++            t = np.percentile(rs, self.to_threshold)
+
+         if self.autoscale:
+             if self._s:
+```
+
 ### `rename_function_parameters`
 
 Self-explanatory. Renames the parameter of a targeted function. Functions are identified by their name, as well as the

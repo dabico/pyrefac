@@ -6,9 +6,9 @@ We invite you to dive into the development with IntelliJ Platform. Your test ass
 
 - [X] Write a CLI application that starts IntelliJ IDEA in headless mode, i.e. without UI;
 - [X] Upon startup, the program should clone a Git repository;
-- [ ] After that, it should apply one of the refactorings to a specified file:
+- [X] After that, it should apply one of the refactorings to a specified file:
   - [X] `add_comment`
-  - [ ] `rename_literal`
+  - [X] `rename_literal`
   - [X] `rename_function_parameters`
 - [ ] The app should return the Unix `patch` that actually performs the changes;
 
@@ -31,31 +31,6 @@ The following requirements should be met:
 ## Testing
 
 For testing, we attached a `test.yaml` with some data.
-Here's an excerpt from the file featuring one of each refactoring type:
-
-```yaml
-- refactorings:
-  - parameters:
-      class: EllipsoidTool
-      comment: Plots an ellipsoid based on the provided center, radii, and rotation
-        matrix. Allows plotting with custom color and transparency settings.
-      function: plotEllipsoid
-    path: src/ellipsoid_tool.py
-    refactoring_function: add_comment
-  - parameters:
-      class: ''
-      function: radius_axial
-      new_name: radius_after_center
-      old_name: r2
-    path: src/measures.py
-    refactoring_function: rename_literal
-  - parameters:
-      class: organ_measure
-      function: volume
-      old_name: voxel_data
-    path: src/measures.py
-    refactoring_function: rename_function_parameters
-  repository: git@github.com:DL4XRayTomoImaging-KIT/measuring-repo.git
 ```
 
 ## Timeline
