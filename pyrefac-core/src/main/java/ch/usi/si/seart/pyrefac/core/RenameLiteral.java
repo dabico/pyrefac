@@ -7,15 +7,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.LocalSearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.jetbrains.python.psi.PyAssignmentStatement;
 import com.jetbrains.python.psi.PyClass;
 import com.jetbrains.python.psi.PyFunction;
-import com.jetbrains.python.psi.PyStatementList;
 import com.jetbrains.python.psi.PyTargetExpression;
 import com.jetbrains.python.refactoring.PyRefactoringUtil;
 
 import java.util.Objects;
-import java.util.stream.Stream;
 
 public final class RenameLiteral extends FunctionRefactoring {
 
@@ -38,10 +37,7 @@ public final class RenameLiteral extends FunctionRefactoring {
     protected void perform(PyFunction node) {
         if (oldName.equals(newName)) return;
         Project project = node.getProject();
-        PyStatementList statements = node.getStatementList();
-        PyAssignmentStatement assignment = Stream.of(statements.getStatements())
-                .filter(PyAssignmentStatement.class::isInstance)
-                .map(PyAssignmentStatement.class::cast)
+        PyAssignmentStatement assignment = PsiTreeUtil.findChildrenOfType(node, PyAssignmentStatement.class).stream()
                 .filter(statement -> statement.isAssignmentTo(oldName))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Literal \"" + oldName + "\" not found"));
