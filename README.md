@@ -7,9 +7,11 @@ its core functionality can be extended by other plugins or applications that run
 
 ## Requirements
 
-- Git
-- Java 17
-- Gradle 8.7
+| Software | Version |
+|:---------|--------:|
+| Java     |      17 |
+| Gradle   |     8.7 |
+| Git      |      \* |
 
 ## Running
 
