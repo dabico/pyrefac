@@ -279,3 +279,18 @@ index 5f70dcd..e4110d2 100644
          if make_ax:
              plt.show()
 ```
+
+## Testing
+
+To test the plugin functionalities, you can run the aptly named Python helper script:
+
+```shell
+pip install virtualenv
+virtualenv venv
+./venv/bin/pip install -r requirements.txt
+./venv/bin/python test.py
+```
+
+Note that this only checks if the CLI commands execute without errors. To inspect the refactoring results, pass the
+`--verbose` flag to the script. You can also run it directly from the IDE with the provided run configuration, but you
+may need to install the packages from `requirements.txt` in your IDE's Python interpreter before doing so.
