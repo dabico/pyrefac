@@ -1,5 +1,10 @@
 # PyRefac
 
+_PyRefac_ is a plugin for IntelliJ IDEA that facilitates refactoring Python source code using a set of predefined
+operations. Written in Java, it uses the IntelliJ Platform to interact with the IDE, performing tasks such as cloning
+repositories, transforming code, and generating patches. Although primarily designed to be run from the command line,
+its core functionality can be extended by other plugins or applications that run on the IDEA platform.
+
 ## Requirements
 
 - Git
