@@ -53,12 +53,10 @@ The parameters are the same as the Gradle task.
 
 ### `add_comment`
 
-Adds a [DocString](https://peps.python.org/pep-0257/) comment to a targeted function. Functions are identified by their
-name, as well as the class they reside in. To target functions within the root scope, the class name should be omitted.
-If the function already has a documentation comment, its contents will be replaced. If the input comment does not
-contain any line breaks, the injected DocString will also be single-line. On the other hand, if the comment contains
-line breaks, the injected DocString will be multi-line. The refactoring will also ensure that the comment body is\
-properly indented.
+Adds a [DocString](https://peps.python.org/pep-0257/) comment to a specific function, identified by its name and class.
+To target functions in the root scope, omit the class name. If a function already has a documentation comment, it will
+be replaced. If the input comment has no line breaks, the added DocString will be single-line; otherwise, it will be
+multi-line. The refactoring ensures proper indentation of the comment body.
 
 #### Example 1
 
@@ -137,12 +135,9 @@ index 5f70dcd..1afb9be 100644
 
 ### `rename_literal`
 
-Renames a local variable or class attribute reference within a targeted function. Functions are identified by their
-name, as well as the class they reside in. To target functions within the root scope, the class name should be omitted.
-If the refactoring target is a local variable, the refactoring will ensure that the variable is renamed in its
-definition, and all subsequent references within the body. If the refactoring target is a class attribute, the
-refactoring will ensure that the attribute is renamed in its definition, and all subsequent references within the class.
-Refactoring will fail if the provided name is not found, or if the new name is already in use.
+This function renames a local variable or class attribute reference within a specific function, identified by its name
+and class. Omit the class name to target functions in the root scope. The refactoring fails if the provided name isn't
+found or if the new name is already in use.
 
 #### Example 1
 
@@ -238,10 +233,9 @@ index c45c22a..5107d73 100644
 
 ### `rename_function_parameters`
 
-Self-explanatory. Renames the parameter of a targeted function. Functions are identified by their name, as well as the
-class they reside in. To target functions within the root scope, the class name should be omitted. The refactoring will
-ensure that the parameter is renamed both in the function signature, and within the function body. Refactoring will fail
-if the parameter name is not found in the function signature, or if the new parameter name is already in use.
+Renames a parameter of a specific function, identified by its name and class. Omit the class name to target functions in
+the root scope. The refactoring updates both the function signature and references within the function body. It fails if
+the parameter name isn't found in the function signature or if the new parameter name is already in use.
 
 #### Example
 
