@@ -248,8 +248,8 @@ Where `config.json` contains:
 {
   "class": "EllipsoidTool",
   "function": "plotEllipsoid",
-  "old_name": "cageAlpha",
-  "new_name": "cage_alpha"
+  "old_name": "plotAxes",
+  "new_name": "plot_axes"
 }
 ```
 
@@ -257,7 +257,7 @@ Should produce the following diff:
 
 ```diff
 diff --git a/src/ellipsoid_tool.py b/src/ellipsoid_tool.py
-index 5f70dcd..e4110d2 100644
+index 5f70dcd..0fe14a1 100644
 --- a/src/ellipsoid_tool.py
 +++ b/src/ellipsoid_tool.py
 @@ -70,7 +70,7 @@ class EllipsoidTool:
@@ -265,19 +265,19 @@ index 5f70dcd..e4110d2 100644
          return 4./3.*np.pi*radii[0]*radii[1]*radii[2]
 
 -    def plotEllipsoid(self, center, radii, rotation, ax=None, plotAxes=False, cageColor='b', cageAlpha=0.2):
-+    def plotEllipsoid(self, center, radii, rotation, ax=None, plotAxes=False, cageColor='b', cage_alpha=0.2):
++    def plotEllipsoid(self, center, radii, rotation, ax=None, plot_axes=False, cageColor='b', cageAlpha=0.2):
          """Plot an ellipsoid"""
          make_ax = ax == None
          if make_ax:
-@@ -107,7 +107,7 @@ class EllipsoidTool:
-                 ax.plot(X3, Y3, Z3, color=cageColor)
+@@ -89,7 +89,7 @@ class EllipsoidTool:
+             for j in range(len(x)):
+                 [x[i,j],y[i,j],z[i,j]] = np.dot([x[i,j],y[i,j],z[i,j]], rotation) + center
 
-         # plot ellipsoid
--        ax.plot_wireframe(x, y, z, rstride=4, cstride=4, color=cageColor, alpha=cageAlpha)
-+        ax.plot_wireframe(x, y, z, rstride=4, cstride=4, color=cageColor, alpha=cage_alpha)
-
-         if make_ax:
-             plt.show()
+-        if plotAxes:
++        if plot_axes:
+             # make some purdy axes
+             axes = np.array([[radii[0],0.0,0.0],
+                              [0.0,radii[1],0.0],
 ```
 
 ## Testing
