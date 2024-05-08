@@ -12,4 +12,6 @@ TERM=dumb
   -PfilePath="$2" \
   -Prefactoring="$3" \
   -Pparameters="$PWD/$4" \
-  -Dorg.gradle.console=plain
+  -Dorg.gradle.console=plain \
+  | sed -n -e '/^diff --git/,$p'
+  # FIXME: This is a workaround to suppress all other outputs from IntelliJ.
