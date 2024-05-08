@@ -327,3 +327,22 @@ index 5f70dcd..e4110d2 100644
          if make_ax:
              plt.show()
 ```
+
+Another example, adding a DocString to a Python decorator definition where the nested function is not preceded by a
+newline leads to an extra newline being inserted:
+
+```diff
+diff --git a/src/measures.py b/src/measures.py
+index e566219..d29757d 100644
+--- a/src/measures.py
++++ b/src/measures.py
+@@ -35,6 +35,8 @@ def recurrent_cleaner(s):
+     raise Exception(f'Unexpected type for serialisation: {type(s)} for value {s}')
+
+ def organ_measure(mf):
++    """Decorator to apply an organ measurement function to markup and volume."""
++
+     def wrapped_mf(markup, volume, separator=None):
+         if separator is None:
+             markup_ids = [1]
+```
