@@ -11,6 +11,11 @@ tasks {
         options.compilerArgs.plusAssign(projectArgs)
     }
 
+    buildSearchableOptions {
+        // https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin-faq.html
+        enabled = false
+    }
+
     runIde {
         val repository: String? by project
         val filePath: String? by project
