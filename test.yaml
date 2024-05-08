@@ -179,28 +179,4 @@
       old_name: r2
     path: src/measures.py
     refactoring_function: rename_literal
-  - parameters:
-      class: organ_metric
-      function: markup
-      old_name: segmentation_mask
-    path: src/measures.py
-    refactoring_function: rename_function_parameters
-  - parameters:
-      class: organ_metric
-      function: volume
-      old_name: voxel_data
-    path: src/measures.py
-    refactoring_function: rename_function_parameters
-  - parameters:
-      class: organ_measure
-      function: markup
-      old_name: segmentation_mask
-    path: src/measures.py
-    refactoring_function: rename_function_parameters
-  - parameters:
-      class: organ_measure
-      function: volume
-      old_name: voxel_data
-    path: src/measures.py
-    refactoring_function: rename_function_parameters
   repository: git@github.com:DL4XRayTomoImaging-KIT/measuring-repo.git
