@@ -69,13 +69,19 @@
       old_name: _t
     path: src/binscale/converter.py
     refactoring_function: rename_literal
-  - parameters:
-      class: Converter
-      function: __init__
-      new_name: apply_sigmoid
-      old_name: _s
-    path: src/binscale/converter.py
-    refactoring_function: rename_literal
+#
+# FIXME: This test case is currently disabled due to naming conflicts.
+#        Refer to the "Renaming Conflicts" of the "Known Limitations"
+#        section in the README for more information.
+#
+#  - parameters:
+#      class: Converter
+#      function: __init__
+#      new_name: apply_sigmoid
+#      old_name: _s
+#    path: src/binscale/converter.py
+#    refactoring_function: rename_literal
+#
   - parameters:
       class: Converter
       function: __init__

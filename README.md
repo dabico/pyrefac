@@ -367,3 +367,11 @@ index e566219..d29757d 100644
          if separator is None:
              markup_ids = [1]
 ```
+
+### Renaming Conflicts
+
+The plugin has some very basic naming conflict detection logic built-in. If the new name is already in use, the
+refactoring will not be performed. This is to prevent the plugin from making changes that would result in invalid Python
+code. However, there are cases where the renaming could be valid, but the plugin will not allow it. For instance,
+renaming a class attribute to a name that is already in use in the function parameters is not allowed, which could be
+possible in some cases.
