@@ -148,3 +148,7 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+### Project template
+# Testing
+pyrefac-test-*.json
