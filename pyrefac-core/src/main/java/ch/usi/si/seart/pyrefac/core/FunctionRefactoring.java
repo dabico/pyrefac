@@ -33,15 +33,15 @@ abstract class FunctionRefactoring implements Refactoring {
         file.accept(new PyRecursiveElementVisitor() {
 
             @Override
+            public void visitPyClass(@NotNull PyClass node) {
+                boolean visit = className != null && Objects.equals(node.getName(), className);
+                if (visit) super.visitPyClass(node);
+            }
+
+            @Override
             public void visitPyFunction(@NotNull PyFunction node) {
-                String visitedFunctionName = node.getName();
-                if (Objects.equals(visitedFunctionName, functionName)) {
-                    PyClass containingClass = node.getContainingClass();
-                    String containingClassName = containingClass != null ? containingClass.getName() : null;
-                    if (Objects.equals(containingClassName, className)) {
-                        perform(node);
-                    }
-                }
+                boolean visit = Objects.equals(node.getName(), functionName);
+                if (visit) perform(node);
             }
         });
     }
