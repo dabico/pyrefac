@@ -30,12 +30,14 @@ Where:
 
 | Parameter                   | Description                                                                           |
 |-----------------------------|---------------------------------------------------------------------------------------|
-| `$GIT_REPOSITORY_URL`       | URL of the Git repository to clone. Can be either an HTTPS or SSH.                    |
+| `$GIT_REPOSITORY_URL`       | URL of the Git repository to clone. Can be either an HTTPS or SSH[^1].                |
 | `$GIT_REPOSITORY_FILE_PATH` | Repository root-relative path of the file to refactor.                                |
 | `$REFACTORING_NAME`         | Either `add_comment`, `rename_literal`, or `rename_function_parameters`.              |
 | `$REFACTORING_CONFIG_PATH`  | _Relative_ path to the JSON configuration file containing the refactoring parameters. |
 
 IntelliJ run configurations are also provided for easier debugging.
+
+[^1]: If you are using SSH, you may need to add your SSH key to the agent before running the task.
 
 ### Command Line Interface (CLI)
 
