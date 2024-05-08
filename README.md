@@ -295,3 +295,35 @@ virtualenv venv
 Note that this only checks if the CLI commands execute without errors. To inspect the refactoring results, pass the
 `--verbose` flag to the script. You can also run it directly from the IDE with the provided run configuration, but you
 may need to install the packages from `requirements.txt` in your IDE's Python interpreter before doing so.
+
+## Known Limitations
+
+### Whitespace Preservation
+
+Some changes to the source code may result in whitespace changes. For example, changing the name of a parameter that is
+used in a statement with non-standard spacing may result in the spacing being normalized:
+
+```diff
+diff --git a/src/ellipsoid_tool.py b/src/ellipsoid_tool.py
+index 5f70dcd..e4110d2 100644
+--- a/src/ellipsoid_tool.py
++++ b/src/ellipsoid_tool.py
+@@ -70,7 +70,7 @@ class EllipsoidTool:
+         """Calculate the volume of the blob"""
+         return 4./3.*np.pi*radii[0]*radii[1]*radii[2]
+
+-    def plotEllipsoid(self, center, radii, rotation, ax=None, plotAxes=False, cageColor='b', cageAlpha=0.2):
++    def plotEllipsoid(self, center, radii, rotation, ax=None, plotAxes=False, cageColor='b', cage_alpha=0.2):
+         """Plot an ellipsoid"""
+         make_ax = ax == None
+         if make_ax:
+@@ -107,7 +107,7 @@ class EllipsoidTool:
+                 ax.plot(X3, Y3, Z3, color=cageColor)
+
+         # plot ellipsoid
+-        ax.plot_wireframe(x, y, z,  rstride=4, cstride=4, color=cageColor, alpha=cageAlpha)
++        ax.plot_wireframe(x, y, z, rstride=4, cstride=4, color=cageColor, alpha=cage_alpha)
+
+         if make_ax:
+             plt.show()
+```
