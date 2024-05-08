@@ -2,6 +2,7 @@
 
 ## Requirements
 
+- Git
 - Java 17
 - Gradle 8.7
 
@@ -20,12 +21,12 @@ You can run the plugin using the Gradle task:
 
 Where:
 
-| Parameter                   | Description                                                                          |
-|-----------------------------|--------------------------------------------------------------------------------------|
-| `$GIT_REPOSITORY_URL`       | URL of the Git repository to clone. Can be either an HTTPS or SSH                    |
-| `$GIT_REPOSITORY_FILE_PATH` | Repository root-relative path of the file to refactor                                |
-| `$REFACTORING_NAME`         | Either `add_comment`, `rename_literal`, or `rename_function_parameters`              |
-| `$REFACTORING_CONFIG_PATH`  | _Relative_ path to the JSON configuration file containing the refactoring parameters |
+| Parameter                   | Description                                                                           |
+|-----------------------------|---------------------------------------------------------------------------------------|
+| `$GIT_REPOSITORY_URL`       | URL of the Git repository to clone. Can be either an HTTPS or SSH.                    |
+| `$GIT_REPOSITORY_FILE_PATH` | Repository root-relative path of the file to refactor.                                |
+| `$REFACTORING_NAME`         | Either `add_comment`, `rename_literal`, or `rename_function_parameters`.              |
+| `$REFACTORING_CONFIG_PATH`  | _Relative_ path to the JSON configuration file containing the refactoring parameters. |
 
 IntelliJ run configurations are also provided for easier debugging.
 
