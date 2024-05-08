@@ -307,6 +307,24 @@ may need to install the packages from `requirements.txt` in your IDE's Python in
 
 ## Known Limitations
 
+### Git Operations
+
+The plugin clones the entire repository to a temporary directory to perform the refactorings. In order to make the
+process as efficient as possible, the plugin performs a shallow clone, which is then automatically deleted once the
+patch has been obtained. Although this approach is efficient for a single run, it may not be suitable for repeated runs
+on the same repository, as each run will perform a clone. One could consider caching the repository locally to avoid
+this, but then we have to make sure the local clone is kept up-to-date between runs. Furthermore, each run will require
+the repository contents to be reset to the original state. This is all assuming only a single instance of the plugin is
+running at any given time. If multiple instances are running concurrently, they may interfere with each other. With the
+current approach, each instance is completely isolated from the others.
+
+One thing to note is that this plugin uses `Git4Idea` to perform Git operations. Since the transitively included plugin
+uses the `git` executable under the hood, it is necessary to have said software installed on your system before running.
+Although most (if not all) modern systems will meet this requirement, it is worth pointing out if you intend to run the
+plugin in a containerized environment (e.g. a CI/CD pipeline or Alpine-based Docker container). Switching to a natively
+written Git implementation (e.g. JGit) would alleviate this issue, but I wanted to use as much of the existing JetBrains
+tooling as possible.
+
 ### Whitespace Preservation
 
 Some changes to the source code may result in whitespace changes. For example, changing the name of a parameter that is
