@@ -1,5 +1,7 @@
 package ch.usi.si.seart.pyrefac.core;
 
+import ch.usi.si.seart.pyrefac.core.exception.NameAlreadyInUseException;
+import ch.usi.si.seart.pyrefac.core.exception.PsiNamedElementNotFoundException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -41,9 +43,9 @@ public final class RenameLiteral extends FunctionRefactoring {
         PsiNamedElement target = PsiTreeUtil.findChildrenOfType(statements, PsiNamedElement.class).stream()
                 .filter(element -> oldName.equals(element.getName()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Literal \"" + oldName + "\" not found"));
+                .orElseThrow(() -> new PsiNamedElementNotFoundException(oldName));
         boolean canRename = PyRefactoringUtil.isValidNewName(newName, target);
-        if (!canRename) throw new IllegalArgumentException("Identifier \"" + newName + "\" already in use");
+        if (!canRename) throw new NameAlreadyInUseException(newName);
         PyClass parent = node.getContainingClass();
         LocalSearchScope scope = new LocalSearchScope(parent != null ? parent : node);
         ThrowableComputable<PsiElement, RuntimeException> action = getRenameAction(scope, target, newName);

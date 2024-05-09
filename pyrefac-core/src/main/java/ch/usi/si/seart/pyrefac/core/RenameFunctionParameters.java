@@ -1,5 +1,7 @@
 package ch.usi.si.seart.pyrefac.core;
 
+import ch.usi.si.seart.pyrefac.core.exception.NameAlreadyInUseException;
+import ch.usi.si.seart.pyrefac.core.exception.PsiNamedElementNotFoundException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -12,7 +14,6 @@ import com.jetbrains.python.psi.PyNamedParameter;
 import com.jetbrains.python.psi.PyParameterList;
 import com.jetbrains.python.refactoring.PyRefactoringUtil;
 
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public final class RenameFunctionParameters extends FunctionRefactoring {
@@ -38,9 +39,9 @@ public final class RenameFunctionParameters extends FunctionRefactoring {
         Project project = node.getProject();
         PyParameterList parameters = node.getParameterList();
         PyNamedParameter target = parameters.findParameterByName(oldName);
-        if (target == null) throw new NoSuchElementException("Parameter \"" + oldName + "\" not found");
+        if (target == null) throw new PsiNamedElementNotFoundException(oldName);
         boolean canRename = PyRefactoringUtil.isValidNewName(newName, target);
-        if (!canRename) throw new IllegalArgumentException("Identifier \"" + newName + "\" already in use");
+        if (!canRename) throw new NameAlreadyInUseException(newName);
         LocalSearchScope scope = new LocalSearchScope(node);
         ThrowableComputable<PsiElement, RuntimeException> action = getRenameAction(scope, target, newName);
         WriteCommandAction.runWriteCommandAction(project, action);
