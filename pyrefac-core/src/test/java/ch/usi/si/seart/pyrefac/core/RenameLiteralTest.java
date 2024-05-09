@@ -2,7 +2,8 @@ package ch.usi.si.seart.pyrefac.core;
 
 import ch.usi.si.seart.pyrefac.core.exception.NameAlreadyInUseException;
 import ch.usi.si.seart.pyrefac.core.exception.PsiNamedElementNotFoundException;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.testFramework.junit5.RunInEdt;
+import com.intellij.testFramework.junit5.RunMethodInEdt;
 import com.intellij.testFramework.junit5.TestApplication;
 import com.jetbrains.python.psi.PyFile;
 import org.junit.jupiter.api.Assertions;
@@ -16,6 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
 @TestApplication
+@RunInEdt(allMethods = false)
 class RenameLiteralTest extends RefactoringTest {
 
     private static Stream<Arguments> instantiations() {
@@ -49,36 +51,34 @@ class RenameLiteralTest extends RefactoringTest {
         );
     }
 
+    @RunMethodInEdt
     @MethodSource("refactorings")
     @ParameterizedTest(name = "{index}: {0}")
     @DisplayName("Refactoring throws exceptions")
     void testThrows(Class<? extends Throwable> throwable, Refactoring refactoring) {
-        ApplicationManager.getApplication().invokeAndWait(() -> {
-            String content = """
-                    def func():
-                        a = 1
-                        b = 2
-                        return a + b
-                    """;
-            PyFile file = createLightPythonFile(NAME, content);
-            Assertions.assertThrows(throwable, () -> refactoring.perform(file));
-        });
+        String content = """
+                def func():
+                    a = 1
+                    b = 2
+                    return a + b
+                """;
+        PyFile file = createLightPythonFile(NAME, content);
+        Assertions.assertThrows(throwable, () -> refactoring.perform(file));
     }
 
     @Test
+    @RunMethodInEdt
     @DisplayName("Literal not renamed when function is not found")
     void testNoop() {
-        ApplicationManager.getApplication().invokeAndWait(() -> {
-            String content = """
-                    def func():
-                        a = 1
-                        b = 2
-                        return a + b
-                    """;
-            PyFile file = createLightPythonFile(NAME, content);
-            Refactoring refactoring = new RenameFunctionParameters(null, "noop", "a", "_");
-            refactoring.perform(file);
-            Assertions.assertEquals(content, file.getText(), "There should be no changes");
-        });
+        String content = """
+                def func():
+                    a = 1
+                    b = 2
+                    return a + b
+                """;
+        PyFile file = createLightPythonFile(NAME, content);
+        Refactoring refactoring = new RenameFunctionParameters(null, "noop", "a", "_");
+        refactoring.perform(file);
+        Assertions.assertEquals(content, file.getText(), "There should be no changes");
     }
 }

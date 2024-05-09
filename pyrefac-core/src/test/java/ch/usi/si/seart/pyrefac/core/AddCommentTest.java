@@ -1,6 +1,7 @@
 package ch.usi.si.seart.pyrefac.core;
 
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.testFramework.junit5.RunInEdt;
+import com.intellij.testFramework.junit5.RunMethodInEdt;
 import com.intellij.testFramework.junit5.TestApplication;
 import com.jetbrains.python.psi.PyFile;
 import org.junit.jupiter.api.Assertions;
@@ -14,6 +15,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
 @TestApplication
+@RunInEdt(allMethods = false)
 class AddCommentTest extends RefactoringTest {
 
     private static Stream<Arguments> instantiations() {
@@ -33,80 +35,76 @@ class AddCommentTest extends RefactoringTest {
     }
 
     @Test
+    @RunMethodInEdt
     @DisplayName("Comment not added when function is not found")
     void testNoop() {
-        ApplicationManager.getApplication().invokeAndWait(() -> {
-            String content = "def func(): pass";
-            PyFile file = createLightPythonFile(NAME, content);
-            Refactoring refactoring = new AddComment(null, "noop", "This should appear in the file");
-            refactoring.perform(file);
-            Assertions.assertEquals(content, file.getText(), "There should be no changes");
-        });
+        String content = "def func(): pass";
+        PyFile file = createLightPythonFile(NAME, content);
+        Refactoring refactoring = new AddComment(null, "noop", "This should appear in the file");
+        refactoring.perform(file);
+        Assertions.assertEquals(content, file.getText(), "There should be no changes");
     }
 
     @Test
+    @RunMethodInEdt
     @DisplayName("Comment added to function")
     void testAdd() {
-        ApplicationManager.getApplication().invokeAndWait(() -> {
-            String content = """
-                    def func():
-                        pass
-                    """;
-            PyFile file = createLightPythonFile(NAME, content);
-            Refactoring refactoring = new AddComment(null, "func", "Comment");
-            refactoring.perform(file);
-            String expected = """
-                    def func():
-                        \"""Comment\"""
-                        pass
-                    """;
-            Assertions.assertEquals(expected, file.getText(), "Comment should be added");
-        });
+        String content = """
+                def func():
+                    pass
+                """;
+        PyFile file = createLightPythonFile(NAME, content);
+        Refactoring refactoring = new AddComment(null, "func", "Comment");
+        refactoring.perform(file);
+        String expected = """
+                def func():
+                    \"""Comment\"""
+                    pass
+                """;
+        Assertions.assertEquals(expected, file.getText(), "Comment should be added");
     }
 
     @Test
+    @RunMethodInEdt
     @DisplayName("Multi-line comment added to function")
     void testAddMultiLine() {
-        ApplicationManager.getApplication().invokeAndWait(() -> {
-            String content = """
-                    def func():
-                        pass
-                    """;
-            PyFile file = createLightPythonFile(NAME, content);
-            Refactoring refactoring = new AddComment(null, "func", "Comment\non\nmultiple\nlines");
-            refactoring.perform(file);
-            String expected = """
-                    def func():
-                        \"""
-                        Comment
-                        on
-                        multiple
-                        lines
-                        \"""
-                        pass
-                    """;
-            Assertions.assertEquals(expected, file.getText(), "Comment should be added");
-        });
+        String content = """
+                def func():
+                    pass
+                """;
+        PyFile file = createLightPythonFile(NAME, content);
+        Refactoring refactoring = new AddComment(null, "func", "Comment\non\nmultiple\nlines");
+        refactoring.perform(file);
+        String expected = """
+                def func():
+                    \"""
+                    Comment
+                    on
+                    multiple
+                    lines
+                    \"""
+                    pass
+                """;
+        Assertions.assertEquals(expected, file.getText(), "Comment should be added");
     }
 
     @Test
+    @RunMethodInEdt
     @DisplayName("Replace existing comment")
     void testReplace() {
-        ApplicationManager.getApplication().invokeAndWait(() -> {
-            String content = """
-                    def func():
-                        \"""Old comment\"""
-                        pass
-                    """;
-            PyFile file = createLightPythonFile(NAME, content);
-            Refactoring refactoring = new AddComment(null, "func", "New comment");
-            refactoring.perform(file);
-            String expected = """
-                    def func():
-                        \"""New comment\"""
-                        pass
-                    """;
-            Assertions.assertEquals(expected, file.getText(), "Comment should be replaced");
-        });
+        String content = """
+                def func():
+                    \"""Old comment\"""
+                    pass
+                """;
+        PyFile file = createLightPythonFile(NAME, content);
+        Refactoring refactoring = new AddComment(null, "func", "New comment");
+        refactoring.perform(file);
+        String expected = """
+                def func():
+                    \"""New comment\"""
+                    pass
+                """;
+        Assertions.assertEquals(expected, file.getText(), "Comment should be replaced");
     }
 }
