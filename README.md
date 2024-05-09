@@ -286,7 +286,20 @@ index 5f70dcd..0fe14a1 100644
 
 ## Testing
 
-To test the plugin functionalities, you can run the aptly named Python helper script:
+### Unit Testing
+
+To run the unit tests, execute the following command:
+
+```shell
+./gradlew test
+```
+
+These test the core refactoring functionalities on simple files. You can also use the provided run configuration to the
+same effect.
+
+### Manual Testing
+
+To test the plugin functionalities against real-world data, you can run the aptly named Python helper script:
 
 ```shell
 pip install virtualenv
