@@ -1,7 +1,7 @@
 package ch.usi.si.seart.pyrefac.cli;
 
-import groovyjarjarpicocli.CommandLine.IParameterExceptionHandler;
-import groovyjarjarpicocli.CommandLine.ParameterException;
+import picocli.CommandLine.IParameterExceptionHandler;
+import picocli.CommandLine.ParameterException;
 
 public final class ParameterExceptionHandler implements IParameterExceptionHandler {
 

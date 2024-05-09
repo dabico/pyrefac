@@ -1,8 +1,12 @@
 group = rootProject.group
 version = rootProject.version
 
+val picocliVersion = "4.7.6"
+
 dependencies {
     implementation(project(":pyrefac-core"))
+    implementation("info.picocli:picocli:${picocliVersion}")
+    annotationProcessor("info.picocli:picocli-codegen:${picocliVersion}")
 }
 
 tasks {

@@ -18,10 +18,10 @@ import git4idea.commands.Git;
 import git4idea.commands.GitCommand;
 import git4idea.commands.GitCommandResult;
 import git4idea.commands.GitLineHandler;
-import groovyjarjarpicocli.CommandLine.Command;
-import groovyjarjarpicocli.CommandLine.ITypeConverter;
-import groovyjarjarpicocli.CommandLine.Parameters;
 import org.jdom.JDOMException;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.ITypeConverter;
+import picocli.CommandLine.Parameters;
 
 import java.io.File;
 import java.io.FileNotFoundException;

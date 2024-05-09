@@ -4,9 +4,9 @@ import ch.usi.si.seart.pyrefac.cli.ExecutionExceptionHandler;
 import ch.usi.si.seart.pyrefac.cli.ParameterExceptionHandler;
 import ch.usi.si.seart.pyrefac.cli.PyRefac;
 import com.intellij.openapi.application.ApplicationStarter;
-import groovyjarjarpicocli.CommandLine;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import picocli.CommandLine;
 
 import java.util.List;
 

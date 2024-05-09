@@ -1,9 +1,9 @@
 package ch.usi.si.seart.pyrefac.cli;
 
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
-import groovyjarjarpicocli.CommandLine;
-import groovyjarjarpicocli.CommandLine.IExecutionExceptionHandler;
-import groovyjarjarpicocli.CommandLine.ParseResult;
+import picocli.CommandLine;
+import picocli.CommandLine.IExecutionExceptionHandler;
+import picocli.CommandLine.ParseResult;
 
 import java.io.FileNotFoundException;
 import java.util.NoSuchElementException;

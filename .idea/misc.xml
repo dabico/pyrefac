@@ -6,6 +6,7 @@
   <component name="EntryPointsManager">
     <writeAnnotations>
       <writeAnnotation name="groovyjarjarpicocli.CommandLine.Parameters" />
+      <writeAnnotation name="picocli.CommandLine.Parameters" />
     </writeAnnotations>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
