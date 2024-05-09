@@ -6,12 +6,12 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.jetbrains.python.psi.PyAssignmentStatement;
 import com.jetbrains.python.psi.PyClass;
 import com.jetbrains.python.psi.PyFunction;
-import com.jetbrains.python.psi.PyTargetExpression;
+import com.jetbrains.python.psi.PyStatementList;
 import com.jetbrains.python.refactoring.PyRefactoringUtil;
 
 import java.util.Objects;
@@ -37,17 +37,16 @@ public final class RenameLiteral extends FunctionRefactoring {
     protected void perform(PyFunction node) {
         if (oldName.equals(newName)) return;
         Project project = node.getProject();
-        PyAssignmentStatement assignment = PsiTreeUtil.findChildrenOfType(node, PyAssignmentStatement.class).stream()
-                .filter(statement -> statement.isAssignmentTo(oldName))
+        PyStatementList statements = node.getStatementList();
+        PsiNamedElement target = PsiTreeUtil.findChildrenOfType(statements, PsiNamedElement.class).stream()
+                .filter(element -> oldName.equals(element.getName()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Literal \"" + oldName + "\" not found"));
-        if (assignment.getLeftHandSideExpression() instanceof PyTargetExpression target) {
-            boolean canRename = PyRefactoringUtil.isValidNewName(newName, target);
-            if (!canRename) throw new IllegalArgumentException("Identifier \"" + newName + "\" already in use");
-            PyClass parent = node.getContainingClass();
-            LocalSearchScope scope = new LocalSearchScope(parent != null ? parent : node);
-            ThrowableComputable<PsiElement, RuntimeException> action = getRenameAction(scope, target, newName);
-            WriteCommandAction.runWriteCommandAction(project, action);
-        }
+        boolean canRename = PyRefactoringUtil.isValidNewName(newName, target);
+        if (!canRename) throw new IllegalArgumentException("Identifier \"" + newName + "\" already in use");
+        PyClass parent = node.getContainingClass();
+        LocalSearchScope scope = new LocalSearchScope(parent != null ? parent : node);
+        ThrowableComputable<PsiElement, RuntimeException> action = getRenameAction(scope, target, newName);
+        WriteCommandAction.runWriteCommandAction(project, action);
     }
 }
