@@ -14,8 +14,6 @@ import com.jetbrains.python.psi.PyNamedParameter;
 import com.jetbrains.python.psi.PyParameterList;
 import com.jetbrains.python.refactoring.PyRefactoringUtil;
 
-import java.util.Objects;
-
 public final class RenameFunctionParameters extends FunctionRefactoring {
 
     private final String oldName;
@@ -28,9 +26,13 @@ public final class RenameFunctionParameters extends FunctionRefactoring {
             @JsonProperty("old_name") String oldName,
             @JsonProperty("new_name") String newName
     ) {
-        super(className, Objects.requireNonNull(functionName, "Function name must not be empty or null"));
-        this.oldName = Objects.requireNonNull(oldName, "Old parameter name must not be empty or null");
-        this.newName = Objects.requireNonNull(newName, "New parameter name must not be empty or null");
+        super(className, functionName);
+        if (oldName == null || oldName.isBlank())
+            throw new IllegalArgumentException("Old parameter name must not be null or blank");
+        if (newName == null || newName.isBlank())
+            throw new IllegalArgumentException("New parameter name must not be null or blank");
+        this.oldName = oldName;
+        this.newName = newName;
     }
 
     @Override

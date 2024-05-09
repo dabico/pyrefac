@@ -10,8 +10,8 @@ public class AddCommentTest extends RefactoringTest {
 
     @Test
     public void testThrows() {
-        Assertions.assertThrows(NullPointerException.class, () -> new AddComment("Stub", null, "Random comment"));
-        Assertions.assertThrows(NullPointerException.class, () -> new AddComment("Stub", "__init__", null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new AddComment("Stub", null, "Random comment"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new AddComment("Stub", "__init__", null));
     }
 
     @Test

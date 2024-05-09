@@ -22,6 +22,8 @@ abstract class FunctionRefactoring implements Refactoring {
     private final String functionName;
 
     protected FunctionRefactoring(String className, String functionName) {
+        if (functionName == null || functionName.isBlank())
+            throw new IllegalArgumentException("Function name must not be null or blank");
         this.className = className;
         this.functionName = functionName;
     }

@@ -14,7 +14,6 @@ import com.jetbrains.python.psi.PyFunction;
 import com.jetbrains.python.psi.PyStatementList;
 import com.jetbrains.python.psi.PyStringLiteralExpression;
 
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public final class AddComment extends FunctionRefactoring {
@@ -27,8 +26,10 @@ public final class AddComment extends FunctionRefactoring {
             @JsonProperty("function") String functionName,
             @JsonProperty("comment") String comment
     ) {
-        super(className, Objects.requireNonNull(functionName, "Function name must not be empty or null"));
-        this.comment = Objects.requireNonNull(comment, "Comment must not be empty or null");
+        super(className, functionName);
+        if (comment == null || comment.isBlank())
+            throw new IllegalArgumentException("Comment must not be null or blank");
+        this.comment = comment;
     }
 
     @Override
