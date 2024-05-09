@@ -43,4 +43,70 @@ class AddCommentTest extends RefactoringTest {
             Assertions.assertEquals(content, file.getText(), "There should be no changes");
         });
     }
+
+    @Test
+    @DisplayName("Comment added to function")
+    void testAdd() {
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            String content = """
+                    def func():
+                        pass
+                    """;
+            PyFile file = createLightPythonFile(NAME, content);
+            Refactoring refactoring = new AddComment(null, "func", "Comment");
+            refactoring.perform(file);
+            String expected = """
+                    def func():
+                        \"""Comment\"""
+                        pass
+                    """;
+            Assertions.assertEquals(expected, file.getText(), "Comment should be added");
+        });
+    }
+
+    @Test
+    @DisplayName("Multi-line comment added to function")
+    void testAddMultiLine() {
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            String content = """
+                    def func():
+                        pass
+                    """;
+            PyFile file = createLightPythonFile(NAME, content);
+            Refactoring refactoring = new AddComment(null, "func", "Comment\non\nmultiple\nlines");
+            refactoring.perform(file);
+            String expected = """
+                    def func():
+                        \"""
+                        Comment
+                        on
+                        multiple
+                        lines
+                        \"""
+                        pass
+                    """;
+            Assertions.assertEquals(expected, file.getText(), "Comment should be added");
+        });
+    }
+
+    @Test
+    @DisplayName("Replace existing comment")
+    void testReplace() {
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+            String content = """
+                    def func():
+                        \"""Old comment\"""
+                        pass
+                    """;
+            PyFile file = createLightPythonFile(NAME, content);
+            Refactoring refactoring = new AddComment(null, "func", "New comment");
+            refactoring.perform(file);
+            String expected = """
+                    def func():
+                        \"""New comment\"""
+                        pass
+                    """;
+            Assertions.assertEquals(expected, file.getText(), "Comment should be replaced");
+        });
+    }
 }
