@@ -1,9 +1,11 @@
 - refactorings:
   - parameters:
       class: Scaler
-      comment: Processes and scales the given image using dask operations. Converts
-        integer-typed images to float32, applies scaling with overlap, and then reverts
-        to integer type if necessary.
+      comment: |-
+        Processes and scales the given image using dask operations.
+
+        Converts integer-typed images to float32, applies scaling
+        with overlap, and then reverts to integer type if necessary.
       function: __call__
     path: src/binscale/scaler.py
     refactoring_function: add_comment
@@ -112,8 +114,9 @@
     refactoring_function: add_comment
   - parameters:
       class: EllipsoidTool
-      comment: Plots an ellipsoid based on the provided center, radii, and rotation
-        matrix. Allows plotting with custom color and transparency settings.
+      comment: |-
+        Plots an ellipsoid based on the provided center, radii, and rotation matrix.
+        Allows plotting with custom color and transparency settings.
       function: plotEllipsoid
     path: src/ellipsoid_tool.py
     refactoring_function: add_comment
