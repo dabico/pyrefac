@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+if [ $# -ne "4" ]; then
+    printf "usage: %s <%s> <%s> [add_comment|rename_literal|rename_function_parameters] <%s>\n" \
+      "$(basename "$0")" \
+      "Git repository URL" \
+      "Path to file in repository" \
+      "Relative path to parameters JSON"
+    exit 1
+fi
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 if uname -s | grep -iq cygwin ; then
     DIR=$(cygpath -w "$DIR")
