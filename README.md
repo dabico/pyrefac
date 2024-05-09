@@ -284,6 +284,26 @@ index 5f70dcd..0fe14a1 100644
                               [0.0,radii[1],0.0],
 ```
 
+## Creating Refactorings
+
+To define a new refactoring, just create a class in `ch.usi.si.seart.pyrefac.core` that implements the `Refactoring`
+interface. Pick a good name because the plugin will automatically recognize it when you use it from the command line.
+If you name it `CustomRefactoring`, you can call it as `custom_refactoring` from the CLI. Here's how it looks in code:
+
+```java
+package ch.usi.si.seart.pyrefac.core;
+
+import com.jetbrains.python.psi.PyFile;
+
+public class CustomRefactoring implements Refactoring {
+
+    @Override
+    public void perform(PyFile file) {
+        // TODO: Implement...
+    }
+}
+```
+
 ## Testing
 
 ### Unit Testing
