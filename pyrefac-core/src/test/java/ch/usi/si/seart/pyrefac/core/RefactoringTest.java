@@ -1,17 +1,21 @@
 package ch.usi.si.seart.pyrefac.core;
 
-import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
+import com.intellij.lang.Language;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.psi.PsiFileFactory;
+import com.jetbrains.python.PythonLanguage;
+import com.jetbrains.python.psi.PyFile;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public abstract class RefactoringTest extends BasePlatformTestCase {
+abstract class RefactoringTest {
 
     protected final static String NAME = ".py";
 
-    @Override
-    @BeforeAll
-    protected void setUp() throws Exception {
-        super.setUp();
+    protected PyFile createLightPythonFile(String name, String text) {
+        ProjectManager projectManager = ProjectManager.getInstance();
+        Project project = projectManager.getDefaultProject();
+        PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
+        Language language = PythonLanguage.getInstance();
+        return (PyFile) fileFactory.createFileFromText(name, language, text, false, true);
     }
 }

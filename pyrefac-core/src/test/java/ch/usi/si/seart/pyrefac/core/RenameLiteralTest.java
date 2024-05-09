@@ -3,9 +3,10 @@ package ch.usi.si.seart.pyrefac.core;
 import ch.usi.si.seart.pyrefac.core.exception.NameAlreadyInUseException;
 import ch.usi.si.seart.pyrefac.core.exception.PsiNamedElementNotFoundException;
 import com.intellij.openapi.application.ApplicationManager;
-import com.jetbrains.python.PythonLanguage;
+import com.intellij.testFramework.junit5.TestApplication;
 import com.jetbrains.python.psi.PyFile;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,7 +15,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-public class RenameLiteralTest extends RefactoringTest {
+@TestApplication
+class RenameLiteralTest extends RefactoringTest {
 
     private static Stream<Arguments> instantiations() {
         Executable nullFunction = () -> new RenameLiteral(null, null, "old_name", "new_name");
@@ -29,7 +31,8 @@ public class RenameLiteralTest extends RefactoringTest {
 
     @MethodSource("instantiations")
     @ParameterizedTest(name = "{index}: {0}")
-    public void testThrows(Class<? extends Throwable> throwable, Executable executable) {
+    @DisplayName("Constructors throw IAE given null arguments")
+    void testThrows(Class<? extends Throwable> throwable, Executable executable) {
         Assertions.assertThrows(throwable, executable);
     }
 
@@ -48,7 +51,8 @@ public class RenameLiteralTest extends RefactoringTest {
 
     @MethodSource("refactorings")
     @ParameterizedTest(name = "{index}: {0}")
-    public void testThrows(Class<? extends Throwable> throwable, Refactoring refactoring) {
+    @DisplayName("Refactoring throws exceptions")
+    void testThrows(Class<? extends Throwable> throwable, Refactoring refactoring) {
         ApplicationManager.getApplication().invokeAndWait(() -> {
             String content = """
                     def func():
@@ -56,13 +60,14 @@ public class RenameLiteralTest extends RefactoringTest {
                         b = 2
                         return a + b
                     """;
-            PyFile file = (PyFile) createLightFile(NAME, PythonLanguage.INSTANCE, content);
+            PyFile file = createLightPythonFile(NAME, content);
             Assertions.assertThrows(throwable, () -> refactoring.perform(file));
         });
     }
 
     @Test
-    public void testNoop() {
+    @DisplayName("Literal not renamed when function is not found")
+    void testNoop() {
         ApplicationManager.getApplication().invokeAndWait(() -> {
             String content = """
                     def func():
@@ -70,7 +75,7 @@ public class RenameLiteralTest extends RefactoringTest {
                         b = 2
                         return a + b
                     """;
-            PyFile file = (PyFile) createLightFile(NAME, PythonLanguage.INSTANCE, content);
+            PyFile file = createLightPythonFile(NAME, content);
             Refactoring refactoring = new RenameFunctionParameters(null, "noop", "a", "_");
             refactoring.perform(file);
             Assertions.assertEquals(content, file.getText(), "There should be no changes");
