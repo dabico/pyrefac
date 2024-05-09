@@ -1,7 +1,7 @@
 package ch.usi.si.seart.pyrefac.core;
 
 import ch.usi.si.seart.pyrefac.core.exception.NameAlreadyInUseException;
-import ch.usi.si.seart.pyrefac.core.exception.PsiNamedElementNotFoundException;
+import ch.usi.si.seart.pyrefac.core.exception.PyNamedParameterNotFoundException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -39,7 +39,7 @@ public final class RenameFunctionParameters extends FunctionRefactoring {
         Project project = node.getProject();
         PyParameterList parameters = node.getParameterList();
         PyNamedParameter target = parameters.findParameterByName(oldName);
-        if (target == null) throw new PsiNamedElementNotFoundException(oldName);
+        if (target == null) throw new PyNamedParameterNotFoundException(oldName);
         boolean canRename = PyRefactoringUtil.isValidNewName(newName, target);
         if (!canRename) throw new NameAlreadyInUseException(newName);
         LocalSearchScope scope = new LocalSearchScope(node);
