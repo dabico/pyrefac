@@ -11,6 +11,9 @@ dependencies {
 tasks {
     test {
         useJUnitPlatform()
+        testLogging {
+            events("passed", "failed")
+        }
         jvmArgs = listOf("-Djdk.module.illegalAccess.silent=true")
     }
 }
