@@ -14,26 +14,29 @@ import java.util.stream.Stream;
 
 public class AddCommentTest extends RefactoringTest {
 
-    private static Stream<Arguments> executables() {
+    private static Stream<Arguments> instantiations() {
+        Executable nullFunction = () -> new AddComment(null, null, "Comment");
+        Executable nullComment = () -> new AddComment(null, "__init__", null);
         return Stream.of(
-                Arguments.of((Executable) () -> new AddComment(null, null, "Random comment")),
-                Arguments.of((Executable) () -> new AddComment(null, "__init__", null))
+                Arguments.of(IllegalArgumentException.class, nullFunction),
+                Arguments.of(IllegalArgumentException.class, nullComment)
         );
     }
 
-    @MethodSource("executables")
-    @ParameterizedTest(name = "Test {index}")
-    public void testThrows(Executable action) {
-        Assertions.assertThrows(IllegalArgumentException.class, action);
+    @MethodSource("instantiations")
+    @ParameterizedTest(name = "{index}: {0}")
+    public void testThrows(Class<? extends Throwable> throwable, Executable executable) {
+        Assertions.assertThrows(throwable, executable);
     }
 
     @Test
     public void testNoop() {
         ApplicationManager.getApplication().invokeAndWait(() -> {
-            PyFile file = (PyFile) createLightFile(".py", PythonLanguage.INSTANCE, original);
+            String content = "def func(): pass";
+            PyFile file = (PyFile) createLightFile(NAME, PythonLanguage.INSTANCE, content);
             Refactoring refactoring = new AddComment(null, "noop", "This should appear in the file");
             refactoring.perform(file);
-            Assertions.assertEquals(original, file.getText(), "There should be no changes");
+            Assertions.assertEquals(content, file.getText(), "There should be no changes");
         });
     }
 }
