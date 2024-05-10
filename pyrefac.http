@@ -1,0 +1,40 @@
+### add_comment
+POST localhost:8080/DL4XRayTomoImaging-KIT/BinScale3D/src/binscale/scaler.py
+Content-Type: application/json
+
+{
+    "type": "add_comment",
+    "parameters": {
+        "class": "Scaler",
+        "function": "__init__",
+        "comment": "Initialize the Scaler with a specific scaling factor."
+    }
+}
+
+### rename_literal
+POST localhost:8080/DL4XRayTomoImaging-KIT/measuring-repo/src/measures.py
+Content-Type: application/json
+
+{
+  "type": "rename_literal",
+  "parameters": {
+    "class": "",
+    "function": "radius_axial",
+    "new_name": "radius_after_center",
+    "old_name": "r2"
+  }
+}
+
+### rename_function_parameters
+POST localhost:8080/DL4XRayTomoImaging-KIT/measuring-repo/src/ellipsoid_tool.py
+Content-Type: application/json
+
+{
+  "type": "rename_function_parameters",
+  "parameters": {
+    "class": "EllipsoidTool",
+    "function": "plotEllipsoid",
+    "new_name": "cage_alpha",
+    "old_name": "cageAlpha"
+  }
+}

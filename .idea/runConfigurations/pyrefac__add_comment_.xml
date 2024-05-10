@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="pyrefac [add_comment]" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" path="$PROJECT_DIR$/pyrefac.http" requestIdentifier="add_comment" runType="Run single request">
+    <method v="2" />
+  </configuration>
+</component>
