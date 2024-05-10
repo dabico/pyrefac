@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/pyrefac-cli" />
             <option value="$PROJECT_DIR$/pyrefac-core" />
+            <option value="$PROJECT_DIR$/pyrefac-server" />
           </set>
         </option>
       </GradleProjectSettings>

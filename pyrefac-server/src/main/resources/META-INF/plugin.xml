@@ -1,0 +1,15 @@
+<!-- https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+  <id>ch.usi.si.seart.pyrefac</id>
+  <name>PyRefac Server</name>
+  <vendor email="ozren.dabic@usi.ch" url="https://dabico.github.io">Ozren Dabić</vendor>
+  <description>Server providing PyRefac services through HTTP</description>
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.python</depends>
+  <depends>Git4Idea</depends>
+
+  <!-- https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+  <extensions defaultExtensionNs="com.intellij">
+    <appStarter id="pyrefac-server" implementation="ch.usi.si.seart.pyrefac.ServerRunner"/>
+  </extensions>
+</idea-plugin>

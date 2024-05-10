@@ -8,3 +8,4 @@ pluginManagement {
 rootProject.name = "pyrefac"
 include("pyrefac-cli")
 include("pyrefac-core")
+include("pyrefac-server")
