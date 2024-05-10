@@ -1,4 +1,4 @@
-package ch.usi.si.seart.pyrefac.jackson;
+package ch.usi.si.seart.pyrefac.core.jackson;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 

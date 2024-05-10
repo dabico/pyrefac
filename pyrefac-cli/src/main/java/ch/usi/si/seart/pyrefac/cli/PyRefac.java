@@ -1,7 +1,7 @@
 package ch.usi.si.seart.pyrefac.cli;
 
 import ch.usi.si.seart.pyrefac.core.Refactoring;
-import ch.usi.si.seart.pyrefac.jackson.PyRefacModule;
+import ch.usi.si.seart.pyrefac.core.jackson.PyRefacModule;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
