@@ -56,7 +56,10 @@ class RenameFunctionParametersTest extends RefactoringTestCase {
     @ParameterizedTest(name = "{index}: {0}")
     @DisplayName("Refactoring throws exceptions")
     void testThrows(Class<? extends Throwable> throwable, Refactoring refactoring) {
-        String content = "def func(foo, bar): pass";
+        String content = """
+                def func(foo, bar):
+                    return foo + bar
+                """;
         PyFile file = createLightPythonFile(NAME, content);
         Assertions.assertThrows(throwable, () -> refactoring.perform(file));
     }
@@ -65,10 +68,52 @@ class RenameFunctionParametersTest extends RefactoringTestCase {
     @RunMethodInEdt
     @DisplayName("Parameter not renamed when function is not found")
     void testNoop() {
-        String content = "def func(foo, bar): pass";
+        String content = """
+                def func(foo, bar):
+                    return foo + bar
+                """;
         PyFile file = createLightPythonFile(NAME, content);
         Refactoring refactoring = new RenameFunctionParameters(null, "noop", "foo", "_");
         refactoring.perform(file);
         Assertions.assertEquals(content, file.getText(), "There should be no changes");
+    }
+
+    @Test
+    @RunMethodInEdt
+    @DisplayName("Function parameter renamed")
+    void testRename() {
+        String content = """
+                def func(foo, bar):
+                    return foo + bar
+                """;
+        PyFile file = createLightPythonFile(NAME, content);
+        Refactoring refactoring = new RenameFunctionParameters(null, "func", "foo", "baz");
+        refactoring.perform(file);
+        String expected = """
+                def func(baz, bar):
+                    return baz + bar
+                """;
+        Assertions.assertEquals(expected, file.getText(), "Parameter should be renamed");
+    }
+
+    @Test
+    @RunMethodInEdt
+    @DisplayName("Refactoring can be chained")
+    void testChained() {
+        String content = """
+                def func(foo, bar):
+                    return foo + bar
+                """;
+        Refactoring refactoring;
+        PyFile file = createLightPythonFile(NAME, content);
+        refactoring = new RenameFunctionParameters(null, "func", "foo", "baz");
+        refactoring.perform(file);
+        refactoring = new RenameFunctionParameters(null, "func", "baz", "qux");
+        refactoring.perform(file);
+        String expected = """
+                def func(qux, bar):
+                    return qux + bar
+                """;
+        Assertions.assertEquals(expected, file.getText(), "Parameter should be renamed");
     }
 }
