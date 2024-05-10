@@ -81,4 +81,51 @@ class RenameLiteralTest extends RefactoringTestCase {
         refactoring.perform(file);
         Assertions.assertEquals(content, file.getText(), "There should be no changes");
     }
+
+    @Test
+    @RunMethodInEdt
+    @DisplayName("Literal renamed in function")
+    void testRename() {
+        String content = """
+                def func():
+                    a = 1
+                    b = 2
+                    return a + b
+                """;
+        PyFile file = createLightPythonFile(NAME, content);
+        Refactoring refactoring = new RenameLiteral(null, "func", "a", "_");
+        refactoring.perform(file);
+        String expected = """
+                def func():
+                    _ = 1
+                    b = 2
+                    return _ + b
+                """;
+        Assertions.assertEquals(expected, file.getText(), "Literal should be renamed");
+    }
+
+    @Test
+    @RunMethodInEdt
+    @DisplayName("Refactoring can be chained")
+    void testChaining() {
+        String content = """
+                def func():
+                    a = 1
+                    b = 2
+                    return a + b
+                """;
+        Refactoring refactoring;
+        PyFile file = createLightPythonFile(NAME, content);
+        refactoring = new RenameLiteral(null, "func", "a", "x");
+        refactoring.perform(file);
+        refactoring = new RenameLiteral(null, "func", "x", "y");
+        refactoring.perform(file);
+        String expected = """
+                def func():
+                    y = 1
+                    b = 2
+                    return y + b
+                """;
+        Assertions.assertEquals(expected, file.getText(), "Literal should be renamed");
+    }
 }
