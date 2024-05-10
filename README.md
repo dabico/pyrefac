@@ -435,3 +435,8 @@ refactoring will not be performed. This is to prevent the plugin from making cha
 code. However, there are cases where the renaming could be valid, but the plugin will not allow it. For instance,
 renaming a class attribute to a name that is already in use in the function parameters is not allowed, which could be
 possible in some cases.
+
+### Server Instability
+
+Although the server provides a simple way to interact with the plugin, its implementation is quite limited. As such, do
+not be surprised if the logs show errors. It has not been thoroughly tested, and is most certainly not production-ready.
