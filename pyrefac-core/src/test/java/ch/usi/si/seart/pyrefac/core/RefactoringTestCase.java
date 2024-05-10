@@ -7,7 +7,7 @@ import com.intellij.psi.PsiFileFactory;
 import com.jetbrains.python.PythonLanguage;
 import com.jetbrains.python.psi.PyFile;
 
-abstract class RefactoringTest {
+abstract class RefactoringTestCase {
 
     protected final static String NAME = ".py";
 

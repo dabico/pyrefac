@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 @TestApplication
 @RunInEdt(allMethods = false)
-class RenameLiteralTest extends RefactoringTest {
+class RenameLiteralTest extends RefactoringTestCase {
 
     private static Stream<Arguments> instantiations() {
         Executable nullFunction = () -> new RenameLiteral(null, null, "old_name", "new_name");

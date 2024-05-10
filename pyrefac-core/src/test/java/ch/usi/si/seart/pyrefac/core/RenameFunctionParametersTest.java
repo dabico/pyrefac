@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 @TestApplication
 @RunInEdt(allMethods = false)
-class RenameFunctionParametersTest extends RefactoringTest {
+class RenameFunctionParametersTest extends RefactoringTestCase {
 
     private static Stream<Arguments> instantiations() {
         Executable nullFunction = () -> new RenameFunctionParameters(null, null, "old_name", "new_name");

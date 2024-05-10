@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 @TestApplication
 @RunInEdt(allMethods = false)
-class AddCommentTest extends RefactoringTest {
+class AddCommentTest extends RefactoringTestCase {
 
     private static Stream<Arguments> instantiations() {
         Executable nullFunction = () -> new AddComment(null, null, "Comment");
