@@ -6,4 +6,8 @@ import com.jetbrains.python.psi.PyFile;
 public interface Refactoring {
 
     void perform(PyFile file);
+
+    static Refactoring noop() {
+        return file -> {};
+    }
 }
