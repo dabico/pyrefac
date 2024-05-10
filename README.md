@@ -49,6 +49,33 @@ For convenience, a helper script is provided to run the plugin:
 
 The parameters are the same as the Gradle task.
 
+### Server
+
+To run the plugin as a server, use the following Gradle task:
+
+```shell
+./gradlew serve -Pport="$PORT"
+```
+
+Said task will spin up a `Javalin` server listening on the specified port. By omitting the parameter, the port will
+default to `8080`. Two endpoints are available:
+
+- `GET /`: Returns a `200 OK` response indicating the server is running;
+- `POST /{owner}/{name}/**`: Accepts a JSON payload containing the refactoring parameters and performs the refactoring
+  on the specified repository file. The `owner` and `name` parameters are used to identify the repository to clone. Any
+  additional path segments after correspond to the file path within the repository. This means that the path
+  `/DL4XRayTomoImaging-KIT/measuring-repo/src/ellipsoid_tool.py` will target the `src/ellipsoid_tool.py` file in the
+  `measuring-repo` repository owned by `DL4XRayTomoImaging-KIT`. The JSON payload should contain the refactoring `type`
+  as a string and the refactoring `parameters` as an object. After processing the request, the server will attempt to
+  perform the refactoring, returning one of the following HTTP status codes:
+  - `200 OK`: Refactoring successful, accompanied by the patch diff in the response body;
+  - `204 No Content`: Refactoring accepted, but no changes were made;
+  - `400 Bad Request`: Refactoring failed due to invalid or missing parameters in the JSON payload;
+  - `404 Not Found`: Refactoring failed because the specified file or targeted AST node was not found;
+  - `409 Conflict`: Refactoring failed due to a naming conflict;
+  - `500 Internal Server Error`: Refactoring failed due to an unexpected error.
+  - `501 Not Implemented`: Refactoring failed because the specified refactoring is not supported.
+
 ## Supported Refactorings
 
 ### `add_comment`
