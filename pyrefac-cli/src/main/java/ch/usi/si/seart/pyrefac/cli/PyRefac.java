@@ -1,6 +1,7 @@
 package ch.usi.si.seart.pyrefac.cli;
 
 import ch.usi.si.seart.pyrefac.core.Refactoring;
+import ch.usi.si.seart.pyrefac.core.RefactoringUtil;
 import ch.usi.si.seart.pyrefac.core.jackson.PyRefacModule;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +10,6 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiManager;
@@ -70,17 +70,7 @@ public final class PyRefac implements Callable<Integer> {
 
         @Override
         public Class<? extends Refactoring> convert(String value) {
-            String className = StringUtil.toTitleCase(value).replace("_", "");
-            String packageName = Refactoring.class.getPackageName();
-            String fullyQualifiedName = packageName + "." + className;
-
-            try {
-                return Class.forName(fullyQualifiedName).asSubclass(Refactoring.class);
-            } catch (ClassNotFoundException ex) {
-                throw new UnsupportedOperationException("Unsupported refactoring: " + value, ex);
-            } catch (ClassCastException ex) {
-                throw new UnsupportedOperationException("Can not be used for refactoring: " + className, ex);
-            }
+            return RefactoringUtil.getImplementationClass(value);
         }
     }
 
