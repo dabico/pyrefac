@@ -12,16 +12,16 @@ Content-Type: application/json
 }
 
 ### rename_literal
-POST localhost:8080/DL4XRayTomoImaging-KIT/measuring-repo/src/measures.py
+POST localhost:8080/DL4XRayTomoImaging-KIT/BinScale3D/src/binscale/converter.py
 Content-Type: application/json
 
 {
   "type": "rename_literal",
   "parameters": {
-    "class": "",
-    "function": "radius_axial",
-    "new_name": "radius_after_center",
-    "old_name": "r2"
+    "class": "Converter",
+    "function": "__init__",
+    "new_name": "from_threshold",
+    "old_name": "_f"
   }
 }
 

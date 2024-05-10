@@ -3,14 +3,12 @@ version = rootProject.version
 
 val slf4jVersion = "2.0.13"
 val javalinVersion = "6.1.4"
-val jgitVersion = "6.9.0.202403050737-r"
 
 dependencies {
     implementation(project(":pyrefac-core"))
     implementation("org.slf4j:slf4j-api:${slf4jVersion}")
     implementation("org.slf4j:slf4j-simple:${slf4jVersion}")
     implementation("io.javalin:javalin:${javalinVersion}")
-    implementation("org.eclipse.jgit:org.eclipse.jgit:${jgitVersion}")
 }
 
 tasks {
