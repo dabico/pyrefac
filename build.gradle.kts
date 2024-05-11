@@ -1,5 +1,5 @@
 group = "ch.usi.si.seart.pyrefac"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 
 plugins {
     id("java")
